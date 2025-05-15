@@ -47,6 +47,28 @@ public class SkillSharing {
     private static ArrayList<User> users = new ArrayList<>();
     private static Scanner scanner = new Scanner(System.in);
 
+    static {
+        User ian = new User("Ian Byczek", "ian");
+        ian.addSkillOffered(new Skill("Nursing", ""));
+        users.add(ian);
+
+        User marlon = new User("Marlon Castanon", "marlon");
+        marlon.addSkillOffered(new Skill("Blacksmith", ""));
+        users.add(marlon);
+
+        User wesley = new User("Wesley Zhang", "wesley");
+        wesley.addSkillOffered(new Skill("Cooking", ""));
+        users.add(wesley);
+
+        User chester = new User("Chester Duong", "chester");
+        chester.addSkillOffered(new Skill("Those who know", ""));
+        users.add(chester);
+
+        User juan = new User("Juan Zombrano", "juan");
+        juan.addSkillOffered(new Skill("Serving", ""));
+        users.add(juan);
+    }
+
     public static void main(String[] args) {
         while (true) {
             System.out.println("\nIndividualis");
@@ -177,7 +199,6 @@ public class SkillSharing {
         }
     }
 
-    // NEW: Search for users by skill offered
     private static void searchSkill() {
         System.out.print("Enter skill to search for: ");
         String skillSearch = scanner.nextLine().trim();
