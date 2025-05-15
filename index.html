@@ -27,8 +27,17 @@
     }
     #homePage {
       display: none;
+      width: 100vw;
     }
     #homePage.active {
+      display: block;
+    }
+    #usersPage {
+      display: none;
+      width: 100vw;
+      text-align: center;
+    }
+    #usersPage.active {
       display: block;
     }
     .form-label {
@@ -42,7 +51,6 @@
       max-width: 350px;
     }
     .user { border: 1px solid #e5e5e5; border-radius: 8px; padding: 1em; margin-bottom: 1em; background: #fff; }
-    .matches { background: #f5f5f5; border-radius: 8px; padding: 1em; }
     .success { color: #27ae60; }
     .error { color: #c0392b; }
     .pointer { cursor: pointer; }
@@ -72,16 +80,97 @@
       background-color: #1e90ff !important;
       color: #ffffff;
     }
+    .flex-center-row {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 40px;
+      margin-bottom: 2em;
+      margin-top: 2em;
+    }
+    #searchSkillContainer {
+      position: absolute;
+      top: 30px;
+      right: 40px;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    @media (max-width: 900px) {
+      .flex-center-row {
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+      }
+      #searchSkillContainer {
+        position: static;
+        margin-bottom: 1em;
+        justify-content: flex-end;
+        width: 100%;
+      }
+    }
+    .title-link {
+      color: inherit;
+      text-decoration: none;
+      cursor: pointer;
+      font-size: 2.5em;
+      font-weight: bold;
+      letter-spacing: 2px;
+      display: block;
+      margin-bottom: 0.2em;
+    }
+    .center-title {
+      position: absolute;
+      left: 50%;
+      top: 20px;
+      transform: translateX(-50%);
+      text-align: center;
+      z-index: 101;
+    }
+    .subtitle {
+      position: absolute;
+      left: 50%;
+      top: 70px;
+      transform: translateX(-50%);
+      text-align: center;
+      z-index: 101;
+      font-size: 1.2em;
+      color: #666;
+      margin: 0;
+      padding: 0;
+      font-weight: normal;
+      letter-spacing: 1px;
+    }
+    #registerBtn {
+      background: #1e90ff;
+      color: #fff;
+      border: none;
+      padding: 0.5em 1.2em;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 1em;
+      margin-left: 10px;
+    }
+    #registerBtn:hover {
+      background: #176dc1;
+    }
+    #usersBackBtn {
+      margin: 2em auto 1em auto;
+      display: block;
+    }
+    #toggleUsersBtn, #showAllUsersBtn {
+      display: block;
+      margin: 2em auto 0 auto;
+    }
   </style>
 </head>
 <body class="is-preload">
-  <div id="registerPage" class="active">
+  <div id="registerPage">
     <!-- Header -->
-    <header id="header" class="center pointer" onclick="showHomePage()">
-      <h1 style="cursor:pointer;">Individualis</h1>
-      <p>You give skill, I take your skill</p>
-    </header>
-    <form id="registerForm" style="width:100%;max-width:400px;">
+    <a class="title-link center-title" id="titleLink">Individualis</a>
+    <div class="subtitle">You give skill, I take your skill</div>
+    <form id="registerForm" style="width:100%;max-width:400px;margin-top:120px;">
       <div class="form-group">
         <label class="form-label" for="name">Name:</label>
         <input type="text" id="name" required class="input" />
@@ -105,95 +194,80 @@
 
   <!-- Home Page -->
   <div id="homePage">
-    <!-- Header -->
-    <header id="header" class="center pointer" onclick="showHomePage()">
-      <h1 style="cursor:pointer;">Individualis</h1>
-      <p>You give skill, I take your skill</p>
-    </header>
-    <section class="container">
-      <div class="row gtr-150">
-        <div class="col-6 col-12-medium">
-
-          <!-- Add Skill Offered -->
-          <section class="section">
-            <h2>Add Skill Offered</h2>
-            <form id="offerForm">
-              <div class="row gtr-uniform">
-                <div class="col-4">
-                  <input type="text" id="offerUser" placeholder="User Name" required />
-                </div>
-                <div class="col-4">
-                  <input type="text" id="offerSkill" placeholder="Skill" required />
-                </div>
-                <div class="col-4">
-                  <input type="text" id="offerDesc" placeholder="Skill Description" required />
-                </div>
-                <div class="col-12">
-                  <button type="submit" class="button fit">Add</button>
-                </div>
+    <!-- Centered Title and Subtitle -->
+    <a class="title-link center-title" id="titleLink2">Individualis</a>
+    <div class="subtitle">You give skill, I take your skill</div>
+    <!-- Search Skill Top Right + Register Button -->
+    <div id="searchSkillContainer">
+      <input type="text" id="searchSkill" placeholder="Enter skill" autocomplete="off" />
+      <button onclick="searchSkill()" class="button small" type="button">Search</button>
+      <button id="registerBtn" type="button">Register</button>
+      <div id="autocomplete-list" class="autocomplete-items"></div>
+    </div>
+    <section class="container" style="margin-top:120px;">
+      <div class="flex-center-row">
+        <!-- Add Skill Offered -->
+        <section class="section" style="min-width:300px;">
+          <h2>Add Skill Offered</h2>
+          <form id="offerForm">
+            <div class="row gtr-uniform">
+              <div class="col-12">
+                <input type="text" id="offerUser" placeholder="User Name" required />
               </div>
-            </form>
-            <div id="offerMsg"></div>
-          </section>
-
-          <!-- Add Skill Wanted -->
-          <section class="section">
-            <h2>Add Skill Wanted</h2>
-            <form id="wantForm">
-              <div class="row gtr-uniform">
-                <div class="col-6">
-                  <input type="text" id="wantUser" placeholder="User Name" required />
-                </div>
-                <div class="col-6">
-                  <input type="text" id="wantSkill" placeholder="Skill" required />
-                </div>
-                <div class="col-12">
-                  <button type="submit" class="button fit">Add</button>
-                </div>
+              <div class="col-12">
+                <input type="text" id="offerSkill" placeholder="Skill" required />
               </div>
-            </form>
-            <div id="wantMsg"></div>
-          </section>
-
-        </div>
-        <div class="col-6 col-12-medium">
-
-          <!-- Search Skill (with autocomplete) -->
-          <section class="section">
-            <h2>Search Skill</h2>
-            <div style="position:relative;">
-              <input type="text" id="searchSkill" placeholder="Enter skill" autocomplete="off" />
-              <button onclick="searchSkill()" class="button small" type="button">Search</button>
-              <div id="autocomplete-list" class="autocomplete-items"></div>
+              <div class="col-12">
+                <input type="text" id="offerDesc" placeholder="Skill Description" required />
+              </div>
+              <div class="col-12">
+                <button type="submit" class="button fit">Add</button>
+              </div>
             </div>
-            <div id="searchResult"></div>
-          </section>
+          </form>
+          <div id="offerMsg"></div>
+        </section>
 
-          <!-- Find Matches -->
-          <section class="section">
-            <h2>Find Matches</h2>
-            <button onclick="findMatches()" class="button small">Find Matches</button>
-            <div id="matches" class="matches"></div>
-          </section>
-
-          <!-- All Users -->
-          <section class="section">
-            <h2>All Users</h2>
-            <div id="users"></div>
-          </section>
-
-        </div>
+        <!-- Add Skill Wanted -->
+        <section class="section" style="min-width:300px;">
+          <h2>Add Skill Wanted</h2>
+          <form id="wantForm">
+            <div class="row gtr-uniform">
+              <div class="col-12">
+                <input type="text" id="wantUser" placeholder="User Name" required />
+              </div>
+              <div class="col-12">
+                <input type="text" id="wantSkill" placeholder="Skill" required />
+              </div>
+              <div class="col-12">
+                <button type="submit" class="button fit">Add</button>
+              </div>
+            </div>
+          </form>
+          <div id="wantMsg"></div>
+        </section>
       </div>
+      <div id="searchResult"></div>
+      <!-- Show All Users as a new page, centered -->
+      <button id="showAllUsersBtn" class="button small">Show All Users</button>
     </section>
+  </div>
+
+  <!-- Users Page (full page for all users) -->
+  <div id="usersPage">
+    <a class="title-link center-title" id="titleLink3">Individualis</a>
+    <div class="subtitle">You give skill, I take your skill</div>
+    <button id="usersBackBtn" class="button small" style="margin-top:120px;">Back</button>
+    <h2>All Users</h2>
+    <div id="usersFull"></div>
   </div>
 
   <!-- Footer -->
   <footer id="footer" class="center">
-    <p>&copy; Individualis Skill Sharing Platform.</p>
+    <p></p>
   </footer>
 
   <!-- Scripts -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html5up-stellar/1.0.0/assets/js/main.js"></script>
   <script>
     let users = [];
 
@@ -206,18 +280,31 @@
       users = data ? JSON.parse(data) : [];
     }
 
-    function showRegisterPage() {
+    function showRegisterPage(pushState = true) {
       document.body.style.flexDirection = "column";
       document.getElementById('registerPage').classList.add('active');
       document.getElementById('homePage').classList.remove('active');
+      document.getElementById('usersPage').classList.remove('active');
+      if (pushState) location.hash = "#register";
     }
 
-    function showHomePage() {
+    function showHomePage(pushState = true) {
       document.body.style.flexDirection = "unset";
       document.getElementById('registerPage').classList.remove('active');
       document.getElementById('homePage').classList.add('active');
+      document.getElementById('usersPage').classList.remove('active');
       displayUsers();
       updateAutocomplete();
+      if (pushState) location.hash = "#home";
+    }
+
+    function showUsersPage(pushState = true) {
+      document.body.style.flexDirection = "unset";
+      document.getElementById('registerPage').classList.remove('active');
+      document.getElementById('homePage').classList.remove('active');
+      document.getElementById('usersPage').classList.add('active');
+      displayUsersFull();
+      if (pushState) location.hash = "#users";
     }
 
     function displayUsers() {
@@ -229,7 +316,19 @@
           <strong>Wants:</strong> ${user.skillsWanted.join(', ')}
         </div>`;
       });
-      document.getElementById('users').innerHTML = html || "<i>No users registered yet.</i>";
+      document.getElementById('users') && (document.getElementById('users').innerHTML = html || "<i>No users registered yet.</i>");
+    }
+
+    function displayUsersFull() {
+      let html = '';
+      users.forEach(user => {
+        html += `<div class="user">
+          <b>${user.name}</b> (Discord: ${user.discord})<br>
+          <strong>Offers:</strong> <ul>${user.skillsOffered.map(s => `<li>${s.name} - ${s.description}</li>`).join('')}</ul>
+          <strong>Wants:</strong> ${user.skillsWanted.join(', ')}
+        </div>`;
+      });
+      document.getElementById('usersFull').innerHTML = html || "<i>No users registered yet.</i>";
     }
 
     document.getElementById('registerForm').onsubmit = function(e) {
@@ -243,7 +342,6 @@
         msg.innerHTML = "<span class='error'>User already exists.</span>";
         return;
       }
-      // Parse skills offered as "Skill:Description, Skill2:Description2"
       let skillsOffered = skillsOfferedInput.split(',').map(s => {
         let parts = s.split(':');
         return { name: (parts[0] || '').trim(), description: (parts[1] || '').trim() };
@@ -391,25 +489,49 @@
       }
     }
 
-    function findMatches() {
-      let html = '';
-      let found = false;
-      users.forEach(seeker => {
-        seeker.skillsWanted.forEach(wanted => {
-          users.forEach(provider => {
-            if (provider !== seeker && provider.skillsOffered.some(s => s.name.toLowerCase() === wanted.toLowerCase())) {
-              html += `<div><b>${seeker.name}</b> wants <strong>${wanted}</strong> - Match: <b>${provider.name}</b></div>`;
-              found = true;
-            }
-          });
-        });
-      });
-      document.getElementById('matches').innerHTML = found ? html : "<i>No matches found.</i>";
+    // Show All Users as a new page
+    document.getElementById('showAllUsersBtn').onclick = function() {
+      showUsersPage();
+    };
+
+    // Users page back button
+    document.getElementById('usersBackBtn').onclick = function() {
+      showHomePage();
+    };
+
+    // Title click handlers
+    document.getElementById('titleLink').onclick = function() {
+      showHomePage();
+    };
+    document.getElementById('titleLink2').onclick = function() {
+      showHomePage();
+    };
+    document.getElementById('titleLink3').onclick = function() {
+      showHomePage();
+    };
+
+    // Register button handler
+    document.getElementById('registerBtn').onclick = function() {
+      showRegisterPage();
+    };
+
+    // Handle navigation with hash
+    function handleHash() {
+      if (location.hash === "#register") {
+        showRegisterPage(false);
+      } else if (location.hash === "#users") {
+        showUsersPage(false);
+      } else {
+        showHomePage(false);
+      }
     }
+
+    // Listen for hash changes (back/forward navigation)
+    window.addEventListener('hashchange', handleHash);
 
     // On load
     loadUsers();
-    showRegisterPage();
+    handleHash();
     updateAutocomplete();
   </script>
 </body>
