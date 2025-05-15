@@ -1,72 +1,227 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Skill Sharing Platform</title>
+  <title>Stellar Skill Sharing Platform</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <!-- Stellar Theme CSS (from HTML5UP) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/html5up-stellar/1.0.0/assets/css/main.css" />
   <style>
-    body { font-family: Arial; margin: 2em; }
-    .user { border: 1px solid #ccc; padding: 1em; margin-bottom: 1em; }
+    .user { border: 1px solid #e5e5e5; border-radius: 8px; padding: 1em; margin-bottom: 1em; background: #fff; }
+    .section { margin-bottom: 2em; }
+    .matches { background: #f5f5f5; border-radius: 8px; padding: 1em; }
+    .button { margin-top: 0.5em; }
+    .center { text-align: center; }
+    .success { color: #27ae60; }
+    .error { color: #c0392b; }
   </style>
 </head>
-<body>
-  <h1>Skill Sharing Platform</h1>
-  <h2>Register User</h2>
-  <form id="registerForm">
-    Name: <input type="text" id="name" required><br>
-    Email: <input type="email" id="email" required><br>
-    Phone: <input type="text" id="phone" required><br>
-    Skills Offered (comma separated): <input type="text" id="skillsOffered"><br>
-    Skills Wanted (comma separated): <input type="text" id="skillsWanted"><br>
-    <button type="submit">Register</button>
-  </form>
-  <h2>Search by Skill</h2>
-  <input type="text" id="searchSkill" placeholder="Enter skill">
-  <button onclick="searchSkill()">Search</button>
-  <div id="searchResults"></div>
-  <h2>All Users</h2>
-  <div id="users"></div>
+<body class="is-preload">
+  <!-- Header -->
+  <header id="header" class="center">
+    <h1>Stellar Skill Sharing Platform</h1>
+    <p>Connect, share, and learn new skills with others!</p>
+  </header>
+
+  <!-- Main -->
+  <div id="main" class="wrapper style1">
+    <section class="container">
+      <div class="row gtr-150">
+        <div class="col-6 col-12-medium">
+
+          <section class="section">
+            <h2>Register User</h2>
+            <form id="registerForm">
+              <div class="row gtr-uniform">
+                <div class="col-12">
+                  <input type="text" id="name" placeholder="Name" required />
+                </div>
+                <div class="col-12">
+                  <input type="email" id="email" placeholder="Email" required />
+                </div>
+                <div class="col-12">
+                  <input type="text" id="phone" placeholder="Phone" required />
+                </div>
+                <div class="col-12">
+                  <button type="submit" class="button primary fit">Register</button>
+                </div>
+              </div>
+            </form>
+            <div id="registerMsg"></div>
+          </section>
+
+          <section class="section">
+            <h2>Add Skill Offered</h2>
+            <form id="offerForm">
+              <div class="row gtr-uniform">
+                <div class="col-6">
+                  <input type="text" id="offerUser" placeholder="User Name" required />
+                </div>
+                <div class="col-6">
+                  <input type="text" id="offerSkill" placeholder="Skill" required />
+                </div>
+                <div class="col-12">
+                  <button type="submit" class="button fit">Add</button>
+                </div>
+              </div>
+            </form>
+            <div id="offerMsg"></div>
+          </section>
+
+          <section class="section">
+            <h2>Add Skill Wanted</h2>
+            <form id="wantForm">
+              <div class="row gtr-uniform">
+                <div class="col-6">
+                  <input type="text" id="wantUser" placeholder="User Name" required />
+                </div>
+                <div class="col-6">
+                  <input type="text" id="wantSkill" placeholder="Skill" required />
+                </div>
+                <div class="col-12">
+                  <button type="submit" class="button fit">Add</button>
+                </div>
+              </div>
+            </form>
+            <div id="wantMsg"></div>
+          </section>
+
+        </div>
+        <div class="col-6 col-12-medium">
+
+          <section class="section">
+            <h2>Search User</h2>
+            <input type="text" id="searchName" placeholder="Enter user name" />
+            <button onclick="searchUser()" class="button small">Search</button>
+            <div id="searchResult"></div>
+          </section>
+
+          <section class="section">
+            <h2>Find Matches</h2>
+            <button onclick="findMatches()" class="button small">Find Matches</button>
+            <div id="matches" class="matches"></div>
+          </section>
+
+          <section class="section">
+            <h2>All Users</h2>
+            <div id="users"></div>
+          </section>
+
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Footer -->
+  <footer id="footer" class="center">
+    <ul class="icons">
+      <li><a href="https://html5up.net/stellar" target="_blank" class="icon brands fa-html5"><span class="label">HTML5 UP</span></a></li>
+      <li><a href="https://github.com/" target="_blank" class="icon brands fa-github"><span class="label">GitHub</span></a></li>
+    </ul>
+    <p>&copy; Stellar Skill Sharing Platform. Design: <a href="https://html5up.net/stellar">Stellar by HTML5 UP</a>.</p>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html5up-stellar/1.0.0/assets/js/main.js"></script>
   <script>
     let users = [];
-
-    document.getElementById('registerForm').onsubmit = function(e) {
-      e.preventDefault();
-      let user = {
-        name: document.getElementById('name').value,
-        email: document.getElementById('email').value,
-        phone: document.getElementById('phone').value,
-        skillsOffered: document.getElementById('skillsOffered').value.split(',').map(s => s.trim()).filter(s => s),
-        skillsWanted: document.getElementById('skillsWanted').value.split(',').map(s => s.trim()).filter(s => s)
-      };
-      users.push(user);
-      displayUsers();
-      this.reset();
-    };
 
     function displayUsers() {
       let html = '';
       users.forEach(user => {
         html += `<div class="user">
           <b>${user.name}</b> (${user.email}, ${user.phone})<br>
-          Offers: ${user.skillsOffered.join(', ')}<br>
-          Wants: ${user.skillsWanted.join(', ')}
+          <strong>Offers:</strong> ${user.skillsOffered.join(', ')}<br>
+          <strong>Wants:</strong> ${user.skillsWanted.join(', ')}
         </div>`;
       });
-      document.getElementById('users').innerHTML = html;
+      document.getElementById('users').innerHTML = html || "<i>No users registered yet.</i>";
     }
 
-    function searchSkill() {
-      let skill = document.getElementById('searchSkill').value.trim().toLowerCase();
-      let results = users.filter(user => user.skillsOffered.some(s => s.toLowerCase() === skill));
-      let html = '<h3>Results:</h3>';
-      if (results.length === 0) html += 'No users found.';
-      results.forEach(user => {
-        html += `<div class="user">
+    document.getElementById('registerForm').onsubmit = function(e) {
+      e.preventDefault();
+      let name = document.getElementById('name').value.trim();
+      let email = document.getElementById('email').value.trim();
+      let phone = document.getElementById('phone').value.trim();
+      let msg = document.getElementById('registerMsg');
+      if (users.some(u => u.name.toLowerCase() === name.toLowerCase())) {
+        msg.innerHTML = "<span class='error'>User already exists.</span>";
+        return;
+      }
+      users.push({ name, email, phone, skillsOffered: [], skillsWanted: [] });
+      msg.innerHTML = "<span class='success'>User registered!</span>";
+      displayUsers();
+      this.reset();
+      setTimeout(() => { msg.innerHTML = ""; }, 2000);
+    };
+
+    document.getElementById('offerForm').onsubmit = function(e) {
+      e.preventDefault();
+      let name = document.getElementById('offerUser').value.trim();
+      let skill = document.getElementById('offerSkill').value.trim();
+      let msg = document.getElementById('offerMsg');
+      let user = users.find(u => u.name.toLowerCase() === name.toLowerCase());
+      if (user) {
+        if (!user.skillsOffered.includes(skill)) user.skillsOffered.push(skill);
+        msg.innerHTML = "<span class='success'>Skill added!</span>";
+        displayUsers();
+        this.reset();
+      } else {
+        msg.innerHTML = "<span class='error'>User not found.</span>";
+      }
+      setTimeout(() => { msg.innerHTML = ""; }, 2000);
+    };
+
+    document.getElementById('wantForm').onsubmit = function(e) {
+      e.preventDefault();
+      let name = document.getElementById('wantUser').value.trim();
+      let skill = document.getElementById('wantSkill').value.trim();
+      let msg = document.getElementById('wantMsg');
+      let user = users.find(u => u.name.toLowerCase() === name.toLowerCase());
+      if (user) {
+        if (!user.skillsWanted.includes(skill)) user.skillsWanted.push(skill);
+        msg.innerHTML = "<span class='success'>Skill added!</span>";
+        displayUsers();
+        this.reset();
+      } else {
+        msg.innerHTML = "<span class='error'>User not found.</span>";
+      }
+      setTimeout(() => { msg.innerHTML = ""; }, 2000);
+    };
+
+    function searchUser() {
+      let name = document.getElementById('searchName').value.trim();
+      let user = users.find(u => u.name.toLowerCase() === name.toLowerCase());
+      let resultDiv = document.getElementById('searchResult');
+      if (user) {
+        resultDiv.innerHTML = `<div class="user">
           <b>${user.name}</b> (${user.email}, ${user.phone})<br>
-          Offers: ${user.skillsOffered.join(', ')}<br>
-          Wants: ${user.skillsWanted.join(', ')}
+          <strong>Offers:</strong> ${user.skillsOffered.join(', ')}<br>
+          <strong>Wants:</strong> ${user.skillsWanted.join(', ')}
         </div>`;
-      });
-      document.getElementById('searchResults').innerHTML = html;
+      } else {
+        resultDiv.innerHTML = "<span class='error'>User not found.</span>";
+      }
     }
+
+    function findMatches() {
+      let html = '';
+      let found = false;
+      users.forEach(seeker => {
+        seeker.skillsWanted.forEach(wanted => {
+          users.forEach(provider => {
+            if (provider !== seeker && provider.skillsOffered.includes(wanted)) {
+              html += `<div><b>${seeker.name}</b> wants <strong>${wanted}</strong> - Match: <b>${provider.name}</b></div>`;
+              found = true;
+            }
+          });
+        });
+      });
+      document.getElementById('matches').innerHTML = found ? html : "<i>No matches found.</i>";
+    }
+
+    // Initial display
+    displayUsers();
   </script>
 </body>
 </html>
