@@ -1,35 +1,78 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title> Genius Society </title>
+  <title>Individualis - Skill Sharing Platform</title>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/html5up-stellar/1.0.0/assets/css/main.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
   <style>
     :root {
-      --main-text-stroke: 4px 4px 16px #000;
+      --main-text-stroke: 2px 2px 4px rgba(0, 0, 0, 0.5);
+      --main-color: #6d28d9;
+      --accent-color: #a78bfa;
+      --light-color: #f3e8ff;
+      --dark-color: #4b2067;
+      --success-color: #b4f5c1;
+      --error-color: #ffb4d4;
+      --card-bg: rgba(103, 58, 183, 0.95);
+      --input-bg: #ede9fe;
     }
+    
     html, body {
       height: 100vh;
       margin: 0;
       padding: 0;
       overflow: hidden;
       background: #2d174c;
-      color: #f3e8ff;
+      color: var(--light-color);
+      font-family: 'Segoe UI', Arial, sans-serif;
     }
+    
     body {
       min-height: 100vh;
-      font-family: 'Segoe UI', Arial, sans-serif;
-      background: linear-gradient(135deg, #6d28d9 0%, #a78bfa 100%);
+      background: linear-gradient(135deg, var(--main-color) 0%, var(--accent-color) 100%);
+      transition: background 0.5s ease;
     }
-    #registerPage, #addSkillPage, #usersPage {
+    
+    body:after {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIj48cmVjdCBmaWxsPSJub25lIiB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIvPjxwYXRoIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wMykiIGQ9Ik0wIDI1TDAgMTc1QzI1IDE3NSA2MCAxNzUgMTAwIDE3NUwxMDAgMjVDNjAgMjUgMjUgMjUgMCAyNVoiLz48L3N2Zz4=');
+      background-size: 200px;
+      opacity: 0.5;
+      z-index: -1;
+      pointer-events: none;
+    }
+    
+    #registerPage, #addSkillPage, #matchesPage, #usersPage {
       display: none;
       height: 100vh;
       overflow: auto;
+      padding: 20px;
+      transition: all 0.3s ease;
     }
-    #registerPage.active, #addSkillPage.active, #usersPage.active {
+    
+    #registerPage.active, #addSkillPage.active, #matchesPage.active, #usersPage.active {
       display: block;
+      animation: fadeIn 0.4s ease-in-out;
     }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0px); }
+    }
+    
     #registerContainer {
       display: flex;
       align-items: center;
@@ -37,22 +80,47 @@
       min-height: 100vh;
       background: none;
     }
+    
+    .card {
+      width: 100%;
+      max-width: 400px;
+      background: var(--card-bg);
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+      padding: 30px;
+      color: var(--light-color);
+      margin: 20px auto;
+      border: 2px solid rgba(255,255,255,0.1);
+      backdrop-filter: blur(10px);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+    }
+    
     #registerBox {
       width: 100%;
       max-width: 400px;
-      background: rgba(103, 58, 183, 0.95);
+      background: var(--card-bg);
       border-radius: 16px;
       box-shadow: 0 4px 24px rgba(103,58,183,0.18);
-      padding-bottom: 30px;
-      color: #f3e8ff;
+      padding: 30px;
+      color: var(--light-color);
+      border: 2px solid rgba(255,255,255,0.1);
+      backdrop-filter: blur(10px);
     }
+    
     .side-img {
       width: 200px;
       height: auto;
       margin: 0 30px;
       border-radius: 16px;
       box-shadow: 0 4px 24px rgba(103,58,183,0.18);
+      animation: float 5s ease-in-out infinite;
     }
+    
     @media (max-width: 900px) {
       #registerContainer {
         flex-direction: column;
@@ -63,6 +131,7 @@
         max-width: 300px;
       }
     }
+    
     .title-link {
       color: #fff;
       text-decoration: none;
@@ -72,13 +141,38 @@
       letter-spacing: 2px;
       display: block;
       margin-bottom: 0.2em;
-      text-shadow: 0 2px 8px #6d28d9, var(--main-text-stroke);
+      text-shadow: 0 2px 8px var(--main-color), var(--main-text-stroke);
+      position: relative;
+      transition: all 0.3s ease;
+      overflow: hidden;
     }
+    
+    .title-link:hover {
+      text-shadow: 0 2px 12px var(--main-color), var(--main-text-stroke);
+      color: gold;
+    }
+    
+    .title-link:after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0%;
+      height: 3px;
+      background: gold;
+      transition: width 0.3s ease;
+    }
+    
+    .title-link:hover:after {
+      width: 100%;
+    }
+    
     .center-title {
       position: static;
       text-align: center;
       z-index: 101;
     }
+    
     .subtitle {
       text-align: center;
       font-size: 1.2em;
@@ -89,12 +183,15 @@
       letter-spacing: 1px;
       text-shadow: var(--main-text-stroke);
     }
-    #registerMsg {
+    
+    #registerMsg, #offerMsg, #wantMsg, #rateMsg, #matchMsg {
       text-align: center;
       margin-top: 10px;
       color: #fff;
       text-shadow: var(--main-text-stroke);
+      height: 24px;
     }
+    
     .form-group {
       margin-bottom: 1em;
       width: 100%;
@@ -102,115 +199,287 @@
       text-align: center;
       margin-left: auto;
       margin-right: auto;
+      position: relative;
     }
+    
     .form-label {
       font-weight: bold;
       margin-bottom: 0.2em;
       display: block;
       text-align: center;
       white-space: nowrap;
-      color: #ede9fe;
+      color: var(--light-color);
       text-shadow: var(--main-text-stroke);
     }
-    .input, input[type="text"] {
+    
+    .input, input[type="text"], input[type="number"] {
       width: 90%;
       padding: 0.7em;
       border-radius: 8px;
-      border: 1px solid #a78bfa;
-      background: #ede9fe;
-      color: #4b2067;
+      border: 1px solid var(--accent-color);
+      background: var(--input-bg);
+      color: var(--dark-color);
       margin-bottom: 0.5em;
       font-size: 1em;
       outline: none;
-      transition: border 0.2s;
+      transition: all 0.2s;
       text-shadow: none;
     }
-    .input:focus, input[type="text"]:focus {
-      border: 2px solid #7c3aed;
+    
+    .input:focus, input[type="text"]:focus, input[type="number"]:focus {
+      border: 2px solid var(--main-color);
       background: #fff;
-      color: #4b2067;
+      color: var(--dark-color);
+      box-shadow: 0 0 10px rgba(124, 58, 237, 0.5);
     }
-    .button.primary.fit, .button.fit, #searchSkillContainer .button.small {
-      display: block;
-      margin: 0 auto;
-      background: linear-gradient(90deg, #7c3aed 0%, #5b21b6 100%);
+    
+    select.input {
+      appearance: none;
+      background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18"><path fill="none" d="M0 0h24v24H0z"/><path d="M12 15l-5-5h10l-5 5z" fill="%234b2067"/></svg>');
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      background-size: 18px;
+    }
+    
+    .button {
+      display: inline-block;
+      background: linear-gradient(90deg, var(--main-color) 0%, var(--dark-color) 100%);
       color: #fff;
       border: 2.5px solid gold;
       border-radius: 8px;
       padding: 0.7em 2em;
       font-size: 1.1em;
       font-weight: bold;
-      box-shadow: 0 2px 8px #a78bfa44;
-      transition: background 0.2s, box-shadow 0.2s, transform 0.1s;
+      box-shadow: 0 2px 8px rgba(167, 139, 250, 0.4);
+      transition: all 0.2s;
       text-shadow: var(--main-text-stroke);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
     }
-    .button.primary.fit:hover, .button.fit:hover, #searchSkillContainer .button.small:hover {
-      background: linear-gradient(90deg, #5b21b6 0%, #7c3aed 100%);
-      box-shadow: 0 4px 16px #7c3aed66;
-      transform: translateY(2px);
+    
+    .button:before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: all 0.5s;
+      z-index: -1;
     }
-    .button.primary.fit:active, .button.fit:active, #searchSkillContainer .button.small:active {
-      transform: translateY(4px);
+    
+    .button:hover:before {
+      left: 100%;
     }
-    #usersBackBtn {
-      margin: 2em auto 1em auto;
+    
+    .button:hover {
+      background: linear-gradient(90deg, var(--dark-color) 0%, var(--main-color) 100%);
+      box-shadow: 0 4px 16px rgba(124, 58, 237, 0.5);
+      transform: translateY(-2px);
+    }
+    
+    .button:active {
+      transform: translateY(1px);
+    }
+    
+    .button.primary.fit, .button.fit {
       display: block;
-      background: #7c3aed;
-      color: #fff;
-      border: 2.5px solid gold;
-      text-shadow: var(--main-text-stroke);
+      margin: 0 auto;
     }
-    #showAllUsersBtn {
-      display: block;
-      margin: 2em auto 0 auto;
-      background: #a78bfa;
-      color: #4b2067;
-      border: 2.5px solid gold;
-      text-shadow: var(--main-text-stroke);
+    
+    .button.small {
+      font-size: 0.9em;
+      padding: 0.5em 1.5em;
     }
+    
+    .nav-buttons {
+      display: flex;
+      justify-content: center;
+      margin: 20px 0;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    
+    .nav-button {
+      display: inline-block;
+      padding: 0.5em 1em;
+      margin: 0 5px;
+      background: var(--accent-color);
+      color: var(--dark-color);
+      border: 2px solid gold;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .nav-button:hover {
+      background: var(--main-color);
+      color: white;
+      transform: translateY(-2px);
+    }
+    
+    .nav-button i {
+      margin-right: 5px;
+    }
+    
     .user {
-      border: 1px solid #a78bfa;
+      border: 1px solid var(--accent-color);
       border-radius: 8px;
       padding: 1em;
       margin-bottom: 1em;
-      background: #ede9fe;
-      color: #4b2067;
-      box-shadow: 0 2px 8px #a78bfa22;
-      text-shadow: var(--main-text-stroke);
+      background: rgba(237, 233, 254, 0.9);
+      color: var(--dark-color);
+      box-shadow: 0 2px 8px rgba(167, 139, 250, 0.2);
+      transition: all 0.3s ease;
     }
-    .success { color: #b4f5c1; text-shadow: var(--main-text-stroke); }
-    .error { color: #ffb4d4; text-shadow: var(--main-text-stroke); }
+    
+    .user:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(124, 58, 237, 0.3);
+      border-color: gold;
+    }
+    
+    .skill-tag {
+      display: inline-block;
+      background: var(--main-color);
+      color: white;
+      padding: 0.2em 0.5em;
+      border-radius: 4px;
+      margin: 2px;
+      font-size: 0.9em;
+      transition: all 0.2s;
+    }
+    
+    .skill-tag:hover {
+      background: var(--dark-color);
+      transform: scale(1.05);
+    }
+    
+    .skill-category {
+      color: var(--accent-color);
+      font-style: italic;
+      font-size: 0.8em;
+    }
+    
+    .rating-stars {
+      color: gold;
+      font-size: 1.2em;
+      margin: 10px 0;
+    }
+    
+    .rating-stars i {
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .rating-stars i:hover {
+      transform: scale(1.2);
+    }
+    
+    .match-card {
+      background: linear-gradient(135deg, var(--dark-color), var(--main-color));
+      color: white;
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 15px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+    
+    .match-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    }
+    
+    .match-card:after {
+      content: "";
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+      z-index: 0;
+      pointer-events: none;
+    }
+    
+    .match-users {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .match-skill {
+      text-align: center;
+      font-weight: bold;
+      font-size: 1.2em;
+      padding: 10px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 8px;
+      margin: 10px 0;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .match-arrow {
+      text-align: center;
+      font-size: 1.5em;
+      margin: 0 10px;
+    }
+    
+    .success { color: var(--success-color); text-shadow: var(--main-text-stroke); }
+    .error { color: var(--error-color); text-shadow: var(--main-text-stroke); }
+    
     .pointer { cursor: pointer; }
+    
+    .autocomplete-container {
+      position: relative;
+      width: 90%;
+      margin: 0 auto;
+    }
+    
     .autocomplete-items {
       position: absolute;
-      border: 1px solid #a78bfa;
+      border: 1px solid var(--accent-color);
       border-bottom: none;
       border-top: none;
       z-index: 99;
       top: 100%;
       left: 0;
       right: 0;
-      background: #ede9fe;
+      background: var(--input-bg);
       max-height: 150px;
       overflow-y: auto;
-      color: #4b2067;
-      text-shadow: var(--main-text-stroke);
+      color: var(--dark-color);
+      border-radius: 0 0 8px 8px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
+    
     .autocomplete-items div {
       padding: 10px;
       cursor: pointer;
-      background-color: #ede9fe;
-      border-bottom: 1px solid #a78bfa;
-      text-shadow: var(--main-text-stroke);
+      background-color: var(--input-bg);
+      border-bottom: 1px solid var(--accent-color);
     }
+    
     .autocomplete-items div:hover {
-      background-color: #c4b5fd;
+      background-color: var(--accent-color);
+      color: white;
     }
+    
     .autocomplete-active {
-      background-color: #7c3aed !important;
+      background-color: var(--main-color) !important;
       color: #fff;
-      text-shadow: var(--main-text-stroke);
     }
+    
     .flex-center-row {
       display: flex;
       justify-content: center;
@@ -218,8 +487,9 @@
       gap: 40px;
       margin-bottom: 2em;
       margin-top: 2em;
-      margin-left: 100px;
+      flex-wrap: wrap;
     }
+    
     #searchSkillContainer {
       position: absolute;
       top: 30px;
@@ -229,6 +499,7 @@
       align-items: center;
       gap: 10px;
     }
+    
     @media (max-width: 900px) {
       .flex-center-row {
         flex-direction: column;
@@ -238,48 +509,174 @@
       #searchSkillContainer {
         position: static;
         margin-bottom: 1em;
-        justify-content: flex-end;
+        justify-content: center;
         width: 100%;
       }
     }
-    /* Add black stroke to all text outside of input/textarea/button */
-    body, h1, h2, h3, h4, h5, h6, label, .subtitle, .title-link, .user, .success, .error, #registerMsg, #usersFull, #searchResult {
-      text-shadow: var(--main-text-stroke);
+    
+    #loading {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.7);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    
+    #loading.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+    
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 5px solid rgba(255,255,255,0.2);
+      border-radius: 50%;
+      border-top-color: var(--accent-color);
+      animation: spin 1s ease-in-out infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    .section {
+      min-width: 300px;
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+      border: 2px solid rgba(255,255,255,0.1);
+    }
+    
+    .section:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+    
+    .section h2 {
+      color: white;
+      text-align: center;
+      margin-bottom: 20px;
+      border-bottom: 2px solid gold;
+      padding-bottom: 10px;
+    }
+    
+    .floating-animation {
+      animation: float 5s ease-in-out infinite;
+    }
+    
+    /* Additional styles for fancy effects */
+    .glow-on-hover:hover {
+      box-shadow: 0 0 15px var(--accent-color);
+    }
+    
+    /* Shiny animation for titles */
+    @keyframes shine {
+      from {
+        background-position: -200% 0;
+      }
+      to {
+        background-position: 200% 0;
+      }
+    }
+    
+    .shine-effect {
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .shine-effect:after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 50%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      animation: shine 2s infinite;
     }
   </style>
 </head>
 <body class="is-preload">
+  <!-- Loading Overlay -->
+  <div id="loading">
+    <div class="spinner"></div>
+  </div>
+
+  <!-- Navigation -->
+  <div class="nav-buttons" style="position:fixed; top:10px; left:10px; z-index:1000; display:none;" id="mainNav">
+    <button class="nav-button" onclick="showRegisterPage()"><i class="fas fa-user-plus"></i>Register</button>
+    <button class="nav-button" onclick="showAddSkillPage()"><i class="fas fa-plus-circle"></i>Skills</button>
+    <button class="nav-button" onclick="showMatchesPage()"><i class="fas fa-handshake"></i>Matches</button>
+    <button class="nav-button" onclick="showUsersPage()"><i class="fas fa-users"></i>Users</button>
+  </div>
+
   <!-- Register Session -->
   <div id="registerPage" class="active">
     <div id="registerContainer">
-      <img src="pictures/zani.gif" alt="Side GIF" class="side-img" />
+      <img src="pictures/zani.gif" alt="Side GIF" class="side-img floating-animation" />
       <div id="registerBox">
-        <a class="title-link center-title" id="titleLink">Individualis</a>
+        <a class="title-link center-title shine-effect" id="titleLink">Individualis</a>
         <div class="subtitle">You give skill, I take your skill</div>
         <form id="registerForm" style="width:100%;max-width:400px;margin-top:30px;">
           <div class="form-group">
             <label class="form-label" for="name">Name:</label>
-            <input type="text" id="name" required class="input" />
+            <input type="text" id="name" required class="input glow-on-hover" placeholder="Your Name" />
           </div>
           <div class="form-group">
             <label class="form-label" for="discord">Discord Username:</label>
-            <input type="text" id="discord" required class="input" />
+            <input type="text" id="discord" required class="input glow-on-hover" placeholder="username#0000" />
           </div>
           <div class="form-group">
-            <label class="form-label" for="skillsOffered">What skills do you offer?</label>
-            <input type="text" id="skillsOffered" placeholder="WHATEVER U GOT MANE" required class="input" />
+            <div class="form-label">Skills You Offer:</div>
+            <div id="skillOfferContainer">
+              <div class="skill-offer-row" style="display:flex;margin-bottom:10px;gap:5px;">
+                <input type="text" placeholder="Skill Name" class="input offered-skill-name" style="width:50%;" />
+                <input type="text" placeholder="Description" class="input offered-skill-desc" style="width:30%;" />
+                <select class="input offered-skill-category" style="width:25%;">
+                  <option value="Other">Other</option>
+                  <option value="Crafts">Crafts</option>
+                  <option value="Cooking">Cooking</option>
+                  <option value="Technology">Technology</option>
+                  <option value="Arts">Arts</option>
+                  <option value="Sports">Sports</option>
+                  <option value="Education">Education</option>
+                  <option value="Health">Health</option>
+                </select>
+              </div>
+            </div>
+            <button type="button" id="addMoreSkillsBtn" class="button small" style="margin-top:5px;">
+              <i class="fas fa-plus"></i> Add More Skills
+            </button>
           </div>
           <div class="form-group">
-            <label class="form-label" for="skillsWanted" style="text-align:center; display:block; width:100%; white-space:nowrap;">
-              What skills do you want to learn from others?
-            </label>
-            <input type="text" id="skillsWanted" placeholder="WHATEVER U WANT MANE" required class="input" />
+            <div class="form-label">Skills You Want:</div>
+            <div id="skillWantContainer">
+              <div class="skill-want-row" style="display:flex;margin-bottom:10px;">
+                <input type="text" placeholder="Skill Name" class="input wanted-skill-name" style="width:100%;" />
+              </div>
+            </div>
+            <button type="button" id="addMoreWantsBtn" class="button small" style="margin-top:5px;">
+              <i class="fas fa-plus"></i> Add More Wants
+            </button>
           </div>
-          <button type="submit" class="button primary fit">Register</button>
+          <button type="submit" class="button primary fit">
+            <i class="fas fa-user-plus"></i> Register
+          </button>
           <div id="registerMsg"></div>
         </form>
       </div>
-      <img src="pictures/zani.gif" alt="Side GIF" class="side-img" />
+      <img src="pictures/zani.gif" alt="Side GIF" class="side-img floating-animation" style="transform: scaleX(-1);" />
     </div>
   </div>
 
@@ -287,109 +684,211 @@
   <div id="addSkillPage">
     <!-- Search bar at top right -->
     <div id="searchSkillContainer">
-      <input type="text" id="searchSkill" placeholder="Enter skill" autocomplete="off" />
-      <button onclick="searchSkill()" class="button small" type="button">Search</button>
-      <div id="autocomplete-list" class="autocomplete-items"></div>
+      <div class="autocomplete-container">
+        <input type="text" id="searchSkill" placeholder="Search for a skill" autocomplete="off" class="input glow-on-hover" />
+        <div id="autocomplete-list" class="autocomplete-items"></div>
+      </div>
+      <button onclick="searchSkill()" class="button small" type="button">
+        <i class="fas fa-search"></i> Search
+      </button>
     </div>
-    <a class="title-link center-title" id="titleLink2">Individualis</a>
+    
+    <a class="title-link center-title shine-effect" id="titleLink2">Individualis</a>
     <div class="subtitle">You give skill, I take your skill</div>
+    
     <section class="container">
       <div class="flex-center-row">
         <!-- Add Skill Offered -->
-        <section class="section" style="min-width:300px;">
-          <h2>Add Skill Offered</h2>
+        <section class="section">
+          <h2><i class="fas fa-hands-helping"></i> Add Skill Offered</h2>
           <form id="offerForm">
             <div class="row gtr-uniform">
               <div class="col-12">
-                <input type="text" id="offerUser" placeholder="User Name" required />
+                <input type="text" id="offerUser" placeholder="User Name" required class="input glow-on-hover" />
               </div>
               <div class="col-12">
-                <input type="text" id="offerSkill" placeholder="Skill" required />
+                <input type="text" id="offerSkill" placeholder="Skill" required class="input glow-on-hover" />
               </div>
               <div class="col-12">
-                <input type="text" id="offerDesc" placeholder="Skill Description" required />
+                <input type="text" id="offerDesc" placeholder="Skill Description" class="input glow-on-hover" />
               </div>
               <div class="col-12">
-                <button type="submit" class="button fit">Add</button>
+                <select id="offerCategory" class="input glow-on-hover">
+                  <option value="Other">Other</option>
+                  <option value="Crafts">Crafts</option>
+                  <option value="Cooking">Cooking</option>
+                  <option value="Technology">Technology</option>
+                  <option value="Arts">Arts</option>
+                  <option value="Sports">Sports</option>
+                  <option value="Education">Education</option>
+                  <option value="Health">Health</option>
+                </select>
+              </div>
+              <div class="col-12">
+                <button type="submit" class="button fit">
+                  <i class="fas fa-plus-circle"></i> Add
+                </button>
               </div>
             </div>
           </form>
           <div id="offerMsg"></div>
         </section>
+        
         <!-- Add Skill Wanted -->
-        <section class="section" style="min-width:300px;">
-          <h2>Add Skill Wanted</h2>
+        <section class="section">
+          <h2><i class="fas fa-search"></i> Add Skill Wanted</h2>
           <form id="wantForm">
             <div class="row gtr-uniform">
               <div class="col-12">
-                <input type="text" id="wantUser" placeholder="User Name" required />
+                <input type="text" id="wantUser" placeholder="User Name" required class="input glow-on-hover" />
               </div>
               <div class="col-12">
-                <input type="text" id="wantSkill" placeholder="Skill" required />
+                <input type="text" id="wantSkill" placeholder="Skill" required class="input glow-on-hover" />
               </div>
               <div class="col-12">
-                <button type="submit" class="button fit">Add</button>
+                <button type="submit" class="button fit">
+                  <i class="fas fa-plus-circle"></i> Add
+                </button>
               </div>
             </div>
           </form>
           <div id="wantMsg"></div>
         </section>
+        
+        <!-- Rate User Section -->
+        <section class="section">
+          <h2><i class="fas fa-star"></i> Rate User</h2>
+          <form id="rateForm">
+            <div class="row gtr-uniform">
+              <div class="col-12">
+                <input type="text" id="rateUser" placeholder="User Name" required class="input glow-on-hover" />
+              </div>
+              <div class="col-12">
+                <div class="rating-stars" id="ratingStars">
+                  <i class="far fa-star" data-rating="1"></i>
+                  <i class="far fa-star" data-rating="2"></i>
+                  <i class="far fa-star" data-rating="3"></i>
+                  <i class="far fa-star" data-rating="4"></i>
+                  <i class="far fa-star" data-rating="5"></i>
+                </div>
+                <input type="hidden" id="ratingValue" value="0" />
+              </div>
+              <div class="col-12">
+                <button type="submit" class="button fit">
+                  <i class="fas fa-check-circle"></i> Submit Rating
+                </button>
+              </div>
+            </div>
+          </form>
+          <div id="rateMsg"></div>
+        </section>
       </div>
-      <div id="searchResult"></div>
-      <button id="showAllUsersBtn" class="button small">Show All Users</button>
+      
+      <div id="searchResult" class="container" style="max-width:800px;margin:0 auto;"></div>
+      
+      <div class="nav-buttons">
+        <button id="findMatchesBtn" class="button">
+          <i class="fas fa-handshake"></i> Find Matches
+        </button>
+        <button id="showAllUsersBtn" class="button">
+          <i class="fas fa-users"></i> Show All Users
+        </button>
+      </div>
     </section>
+    
     <!-- Herta GIF at the bottom of the Add Skill session -->
-    <img src="pictures/herta.gif" alt="Herta GIF" style="display:block; margin: 40px auto 10px auto;margin-left:650px; max-width:700px; width:100%; border-radius:16px; box-shadow:0 4px 24px #7c3aed55;">
+    <img src="pictures/herta.gif" alt="Herta GIF" class="floating-animation" style="display:block; margin: 40px auto 10px auto; max-width:300px; width:100%; border-radius:16px; box-shadow:0 4px 24px rgba(124, 58, 237, 0.5);">
+  </div>
+
+  <!-- Matches Page -->
+  <div id="matchesPage">
+    <a class="title-link center-title shine-effect" id="titleLink3">Individualis</a>
+    <div class="subtitle">You give skill, I take your skill</div>
+    
+    <section class="container" style="max-width:800px;margin:20px auto;">
+      <div class="card">
+        <h2><i class="fas fa-handshake"></i> Skill Matches</h2>
+        <p>These are all the matches between users' skills wanted and offered:</p>
+        <div id="matchesList"></div>
+      </div>
+      
+      <div class="nav-buttons">
+        <button id="matchesBackBtn" class="button">
+          <i class="fas fa-arrow-left"></i> Back
+        </button>
+      </div>
+    </section>
   </div>
 
   <!-- Show All Users Session -->
   <div id="usersPage">
-    <a class="title-link center-title" id="titleLink3">Individualis</a>
+    <a class="title-link center-title shine-effect" id="titleLink4">Individualis</a>
     <div class="subtitle">You give skill, I take your skill</div>
-    <button id="usersBackBtn" class="button small" style="margin-top:120px;">Back</button>
-    <h2>All Users</h2>
-    <div id="usersFull"></div>
+    
+    <section class="container" style="max-width:800px;margin:20px auto;">
+      <div class="card">
+        <h2><i class="fas fa-users"></i> All Users</h2>
+        <div id="usersFull"></div>
+      </div>
+      
+      <div class="nav-buttons">
+        <button id="usersBackBtn" class="button">
+          <i class="fas fa-arrow-left"></i> Back
+        </button>
+      </div>
+    </section>
   </div>
 
   <script>
     let users = [];
 
-    // Example users from SkillSharing.java
+    // Example users
     const exampleUsers = [
       {
         name: "Ian Byczek",
         discord: "ian#0001",
-        skillsOffered: [{ name: "Nursing", description: "" }],
-        skillsWanted: []
+        skillsOffered: [{ name: "Nursing", description: "", category: "Health" }],
+        skillsWanted: ["Cooking", "Programming"],
+        ratingCount: 2,
+        ratingAverage: 4.5
       },
       {
         name: "Marlon Castanon",
         discord: "marlon#0002",
-        skillsOffered: [{ name: "Blacksmith", description: "" }],
-        skillsWanted: []
+        skillsOffered: [{ name: "Blacksmith", description: "Metal working and forging", category: "Crafts" }],
+        skillsWanted: ["Woodworking", "Drawing"],
+        ratingCount: 1,
+        ratingAverage: 5.0
       },
       {
         name: "Wesley Zhang",
         discord: "wesley#0003",
-        skillsOffered: [{ name: "Cooking", description: "" }],
-        skillsWanted: []
+        skillsOffered: [{ name: "Cooking", description: "Asian cuisine", category: "Cooking" }],
+        skillsWanted: ["Baking", "Photography"],
+        ratingCount: 3,
+        ratingAverage: 4.0
       },
       {
         name: "Chester Duong",
         discord: "chester#0004",
-        skillsOffered: [{ name: "Those who know", description: "" }],
-        skillsWanted: []
+        skillsOffered: [{ name: "Those who know", description: "Secret knowledge", category: "Other" }],
+        skillsWanted: ["Hiking", "Meditation"],
+        ratingCount: 0,
+        ratingAverage: 0.0
       },
       {
         name: "Juan Zombrano",
         discord: "juan#0005",
-        skillsOffered: [{ name: "Serving", description: "" }],
-        skillsWanted: []
+        skillsOffered: [{ name: "Serving", description: "Restaurant service", category: "Other" }],
+        skillsWanted: ["Dancing", "Singing"],
+        ratingCount: 1,
+        ratingAverage: 4.0
       }
     ];
 
     function saveUsers() {
       localStorage.setItem('skillSharingUsers', JSON.stringify(users));
+      updateAutocomplete();
     }
 
     function loadUsers() {
@@ -410,123 +909,458 @@
       if (changed) saveUsers();
     }
 
+    // Show loading animation
+    function showLoading() {
+      document.getElementById('loading').classList.add('active');
+    }
+
+    // Hide loading animation
+    function hideLoading() {
+      setTimeout(() => {
+        document.getElementById('loading').classList.remove('active');
+      }, 300);
+    }
+
+    // Navigation functions
     function showRegisterPage(pushState = true) {
+      document.getElementById('mainNav').style.display = 'none';
       document.getElementById('registerPage').classList.add('active');
       document.getElementById('addSkillPage').classList.remove('active');
+      document.getElementById('matchesPage').classList.remove('active');
       document.getElementById('usersPage').classList.remove('active');
       if (pushState) location.hash = "#register";
     }
 
     function showAddSkillPage(pushState = true) {
+      document.getElementById('mainNav').style.display = 'flex';
       document.getElementById('registerPage').classList.remove('active');
       document.getElementById('addSkillPage').classList.add('active');
+      document.getElementById('matchesPage').classList.remove('active');
       document.getElementById('usersPage').classList.remove('active');
       displayUsers();
       updateAutocomplete();
       if (pushState) location.hash = "#addskill";
     }
 
-    function showUsersPage(pushState = true) {
+    function showMatchesPage(pushState = true) {
+      document.getElementById('mainNav').style.display = 'flex';
       document.getElementById('registerPage').classList.remove('active');
       document.getElementById('addSkillPage').classList.remove('active');
+      document.getElementById('matchesPage').classList.add('active');
+      document.getElementById('usersPage').classList.remove('active');
+      findAndDisplayMatches();
+      if (pushState) location.hash = "#matches";
+    }
+
+    function showUsersPage(pushState = true) {
+      document.getElementById('mainNav').style.display = 'flex';
+      document.getElementById('registerPage').classList.remove('active');
+      document.getElementById('addSkillPage').classList.remove('active');
+      document.getElementById('matchesPage').classList.remove('active');
       document.getElementById('usersPage').classList.add('active');
       displayUsersFull();
       if (pushState) location.hash = "#users";
     }
 
+    // Display functions
     function displayUsers() {
       let html = '';
       users.forEach(user => {
+        const ratingHTML = getRatingStarsHTML(user.ratingAverage, user.ratingCount);
+        
         html += `<div class="user">
           <b>${user.name}</b> (Discord: ${user.discord})<br>
-          <strong>Offers:</strong> <ul>${user.skillsOffered.map(s => `<li>${s.name} - ${s.description}</li>`).join('')}</ul>
-          <strong>Wants:</strong> ${user.skillsWanted.join(', ')}
+          ${ratingHTML}
+          <strong>Offers:</strong> 
+          <div>${user.skillsOffered.map(s => 
+            `<span class="skill-tag">${s.name}</span> 
+             ${s.description ? `<small>${s.description}</small>` : ''}
+             <small class="skill-category">(${s.category})</small>`
+          ).join(' ')}</div>
+          <strong>Wants:</strong> 
+          <div>${user.skillsWanted.map(s => `<span class="skill-tag">${s}</span>`).join(' ')}</div>
         </div>`;
       });
-      document.getElementById('users') && (document.getElementById('users').innerHTML = html || "<i>No users registered yet.</i>");
+      
+      const usersElement = document.getElementById('users');
+      if (usersElement) {
+        usersElement.innerHTML = html || "<i>No users registered yet.</i>";
+      }
     }
 
     function displayUsersFull() {
       let html = '';
       users.forEach(user => {
+        const ratingHTML = getRatingStarsHTML(user.ratingAverage, user.ratingCount);
+        
         html += `<div class="user">
           <b>${user.name}</b> (Discord: ${user.discord})<br>
-          <strong>Offers:</strong> <ul>${user.skillsOffered.map(s => `<li>${s.name} - ${s.description}</li>`).join('')}</ul>
-          <strong>Wants:</strong> ${user.skillsWanted.join(', ')}
+          ${ratingHTML}
+          <strong>Offers:</strong> 
+          <div>${user.skillsOffered.map(s => 
+            `<span class="skill-tag">${s.name}</span> 
+             ${s.description ? `<small>${s.description}</small>` : ''}
+             <small class="skill-category">(${s.category})</small>`
+          ).join(' ')}</div>
+          <strong>Wants:</strong> 
+          <div>${user.skillsWanted.map(s => `<span class="skill-tag">${s}</span>`).join(' ')}</div>
         </div>`;
       });
+      
       document.getElementById('usersFull').innerHTML = html || "<i>No users registered yet.</i>";
     }
 
+    function getRatingStarsHTML(rating, count) {
+      if (count === 0) {
+        return `<div class="rating-info">No ratings yet</div>`;
+      }
+      
+      const fullStars = Math.floor(rating);
+      const halfStar = rating % 1 >= 0.5;
+      const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
+      
+      let starsHTML = '<div class="rating-stars">';
+      
+      // Full stars
+      for (let i = 0; i < fullStars; i++) {
+        starsHTML += '<i class="fas fa-star"></i>';
+      }
+      
+      // Half star if needed
+      if (halfStar) {
+        starsHTML += '<i class="fas fa-star-half-alt"></i>';
+      }
+      
+      // Empty stars
+      for (let i = 0; i < emptyStars; i++) {
+        starsHTML += '<i class="far fa-star"></i>';
+      }
+      
+      starsHTML += `</div>`;
+      starsHTML += `<div class="rating-info">${rating.toFixed(1)}/5 (${count} ${count === 1 ? 'review' : 'reviews'})</div>`;
+      
+      return starsHTML;
+    }
+
+    function findAndDisplayMatches() {
+      let matches = [];
+      let found = false;
+      
+      // Create a map for faster matching
+      let skillProviderMap = {};
+      
+      // Build map of skills to providers
+      for (const provider of users) {
+        for (const skill of provider.skillsOffered) {
+          const skillKey = skill.name.toLowerCase();
+          if (!skillProviderMap[skillKey]) {
+            skillProviderMap[skillKey] = [];
+          }
+          skillProviderMap[skillKey].push({ user: provider, skill: skill });
+        }
+      }
+      
+      // Find matches by looking up wanted skills in the map
+      for (const seeker of users) {
+        for (const wanted of seeker.skillsWanted) {
+          const wantedKey = wanted.toLowerCase();
+          
+          if (skillProviderMap[wantedKey]) {
+            for (const providerInfo of skillProviderMap[wantedKey]) {
+              const provider = providerInfo.user;
+              const skill = providerInfo.skill;
+              
+              // Skip if seeker and provider are the same person
+              if (seeker.name === provider.name) continue;
+              
+              matches.push({
+                seeker: seeker,
+                provider: provider,
+                skill: skill
+              });
+              
+              found = true;
+            }
+          }
+        }
+      }
+      
+      // Display matches
+      let html = '';
+      
+      if (found) {
+        matches.forEach(match => {
+          html += `
+            <div class="match-card">
+              <div class="match-users">
+                <div>
+                  <strong>${match.seeker.name}</strong>
+                  <div>Wants to learn</div>
+                </div>
+                <div class="match-arrow">
+                  <i class="fas fa-arrows-alt-h"></i>
+                </div>
+                <div>
+                  <strong>${match.provider.name}</strong>
+                  <div>Can teach</div>
+                </div>
+              </div>
+              <div class="match-skill">
+                <i class="fas fa-graduation-cap"></i> ${match.skill.name}
+                ${match.skill.description ? `<div><small>${match.skill.description}</small></div>` : ''}
+                <div><small class="skill-category">(${match.skill.category})</small></div>
+              </div>
+              <div style="text-align:center">
+                <small>Discord: ${match.provider.discord}</small>
+              </div>
+            </div>
+          `;
+        });
+      } else {
+        html = "<p class='error'><i class='fas fa-exclamation-circle'></i> No matches found.</p>";
+      }
+      
+      document.getElementById('matchesList').innerHTML = html;
+    }
+
+    // Form submission handlers
     document.getElementById('registerForm').onsubmit = function(e) {
       e.preventDefault();
+      showLoading();
+      
       let name = document.getElementById('name').value.trim();
       let discord = document.getElementById('discord').value.trim();
-      let skillsOfferedInput = document.getElementById('skillsOffered').value.trim();
-      let skillsWantedInput = document.getElementById('skillsWanted').value.trim();
       let msg = document.getElementById('registerMsg');
-      if (users.some(u => u.name.toLowerCase() === name.toLowerCase())) {
-        msg.innerHTML = "<span class='error'>User already exists.</span>";
+      
+      if (name.length < 2) {
+        msg.innerHTML = "<span class='error'><i class='fas fa-exclamation-circle'></i> Name must be at least 2 characters.</span>";
+        hideLoading();
         return;
       }
-      let skillsOffered = skillsOfferedInput.split(',').map(s => {
-        let parts = s.split(':');
-        return { name: (parts[0] || '').trim(), description: (parts[1] || '').trim() };
-      }).filter(s => s.name);
-      let skillsWanted = skillsWantedInput.split(',').map(s => s.trim()).filter(s => s);
-      users.push({ name, discord, skillsOffered, skillsWanted });
-      msg.innerHTML = "<span class='success'>User registered!</span>";
+      
+      if (users.some(u => u.name.toLowerCase() === name.toLowerCase())) {
+        msg.innerHTML = "<span class='error'><i class='fas fa-exclamation-circle'></i> User already exists.</span>";
+        hideLoading();
+        return;
+      }
+      
+      // Collect skills offered
+      let skillsOffered = [];
+      document.querySelectorAll('.skill-offer-row').forEach(row => {
+        const nameInput = row.querySelector('.offered-skill-name');
+        const descInput = row.querySelector('.offered-skill-desc');
+        const catInput = row.querySelector('.offered-skill-category');
+        
+        if (nameInput && nameInput.value.trim()) {
+          skillsOffered.push({
+            name: nameInput.value.trim(),
+            description: descInput ? descInput.value.trim() : '',
+            category: catInput ? catInput.value : 'Other'
+          });
+        }
+      });
+      
+      // Collect skills wanted
+      let skillsWanted = [];
+      document.querySelectorAll('.wanted-skill-name').forEach(input => {
+        if (input.value.trim()) {
+          skillsWanted.push(input.value.trim());
+        }
+      });
+      
+      users.push({ 
+        name, 
+        discord, 
+        skillsOffered, 
+        skillsWanted,
+        ratingCount: 0,
+        ratingAverage: 0.0
+      });
+      
       saveUsers();
-      setTimeout(() => { msg.innerHTML = ""; showAddSkillPage(); }, 1000);
+      
+      msg.innerHTML = "<span class='success'><i class='fas fa-check-circle'></i> User registered successfully!</span>";
+      
+      setTimeout(() => {
+        msg.innerHTML = "";
+        this.reset();
+        hideLoading();
+        showAddSkillPage();
+      }, 1000);
     };
 
     document.getElementById('offerForm').onsubmit = function(e) {
       e.preventDefault();
+      showLoading();
+      
       let name = document.getElementById('offerUser').value.trim();
       let skill = document.getElementById('offerSkill').value.trim();
       let desc = document.getElementById('offerDesc').value.trim();
+      let category = document.getElementById('offerCategory').value;
       let msg = document.getElementById('offerMsg');
+      
       let user = users.find(u => u.name.toLowerCase() === name.toLowerCase());
+      
       if (user) {
+        if (skill.length < 1) {
+          msg.innerHTML = "<span class='error'><i class='fas fa-exclamation-circle'></i> Skill name cannot be empty.</span>";
+          hideLoading();
+          return;
+        }
+        
         if (!user.skillsOffered.some(s => s.name.toLowerCase() === skill.toLowerCase())) {
-          user.skillsOffered.push({ name: skill, description: desc });
-          msg.innerHTML = "<span class='success'>Skill added!</span>";
+          user.skillsOffered.push({ 
+            name: skill, 
+            description: desc,
+            category: category || 'Other'
+          });
+          
           saveUsers();
           displayUsers();
-          updateAutocomplete();
+          
+          msg.innerHTML = "<span class='success'><i class='fas fa-check-circle'></i> Skill added successfully!</span>";
           this.reset();
         } else {
-          msg.innerHTML = "<span class='error'>Skill already exists for this user.</span>";
+          msg.innerHTML = "<span class='error'><i class='fas fa-exclamation-circle'></i> User already has this skill.</span>";
         }
       } else {
-        msg.innerHTML = "<span class='error'>User not found.</span>";
+        msg.innerHTML = "<span class='error'><i class='fas fa-exclamation-circle'></i> User not found.</span>";
       }
-      setTimeout(() => { msg.innerHTML = ""; }, 2000);
+      
+      setTimeout(() => { 
+        msg.innerHTML = ""; 
+        hideLoading();
+      }, 2000);
     };
 
     document.getElementById('wantForm').onsubmit = function(e) {
       e.preventDefault();
+      showLoading();
+      
       let name = document.getElementById('wantUser').value.trim();
       let skill = document.getElementById('wantSkill').value.trim();
       let msg = document.getElementById('wantMsg');
+      
       let user = users.find(u => u.name.toLowerCase() === name.toLowerCase());
+      
       if (user) {
-        if (!user.skillsWanted.includes(skill)) user.skillsWanted.push(skill);
-        msg.innerHTML = "<span class='success'>Skill added!</span>";
-        saveUsers();
-        displayUsers();
-        this.reset();
+        if (skill.length < 1) {
+          msg.innerHTML = "<span class='error'><i class='fas fa-exclamation-circle'></i> Skill name cannot be empty.</span>";
+          hideLoading();
+          return;
+        }
+        
+        if (!user.skillsWanted.some(s => s.toLowerCase() === skill.toLowerCase())) {
+          user.skillsWanted.push(skill);
+          saveUsers();
+          displayUsers();
+          
+          msg.innerHTML = "<span class='success'><i class='fas fa-check-circle'></i> Skill wanted added successfully!</span>";
+          this.reset();
+        } else {
+          msg.innerHTML = "<span class='error'><i class='fas fa-exclamation-circle'></i> User already wants this skill.</span>";
+        }
       } else {
-        msg.innerHTML = "<span class='error'>User not found.</span>";
+        msg.innerHTML = "<span class='error'><i class='fas fa-exclamation-circle'></i> User not found.</span>";
       }
-      setTimeout(() => { msg.innerHTML = ""; }, 2000);
+      
+      setTimeout(() => { 
+        msg.innerHTML = ""; 
+        hideLoading();
+      }, 2000);
     };
 
+    // Rating system
+    document.getElementById('rateForm').onsubmit = function(e) {
+      e.preventDefault();
+      showLoading();
+      
+      let name = document.getElementById('rateUser').value.trim();
+      let rating = parseInt(document.getElementById('ratingValue').value);
+      let msg = document.getElementById('rateMsg');
+      
+      if (rating < 1 || rating > 5) {
+        msg.innerHTML = "<span class='error'><i class='fas fa-exclamation-circle'></i> Please select a rating from 1 to 5.</span>";
+        hideLoading();
+        return;
+      }
+      
+      let user = users.find(u => u.name.toLowerCase() === name.toLowerCase());
+      
+      if (user) {
+        // Update rating
+        user.ratingCount = (user.ratingCount || 0) + 1;
+        let totalScore = (user.ratingAverage || 0) * (user.ratingCount - 1) + rating;
+        user.ratingAverage = totalScore / user.ratingCount;
+        
+        saveUsers();
+        displayUsers();
+        
+        msg.innerHTML = `<span class='success'><i class='fas fa-check-circle'></i> Rating added! User's current rating: ${user.ratingAverage.toFixed(1)}/5 (${user.ratingCount} ${user.ratingCount === 1 ? 'review' : 'reviews'})</span>`;
+        this.reset();
+        resetRatingStars();
+      } else {
+        msg.innerHTML = "<span class='error'><i class='fas fa-exclamation-circle'></i> User not found.</span>";
+      }
+      
+      setTimeout(() => { 
+        msg.innerHTML = ""; 
+        hideLoading();
+      }, 2000);
+    };
+
+    // Rating stars interactivity
+    function setupRatingStars() {
+      const stars = document.querySelectorAll('#ratingStars i');
+      
+      stars.forEach(star => {
+        star.addEventListener('mouseover', function() {
+          const rating = parseInt(this.getAttribute('data-rating'));
+          resetRatingStars();
+          
+          for (let i = 0; i < rating; i++) {
+            stars[i].classList.remove('far');
+            stars[i].classList.add('fas');
+          }
+        });
+        
+        star.addEventListener('click', function() {
+          const rating = parseInt(this.getAttribute('data-rating'));
+          document.getElementById('ratingValue').value = rating;
+          
+          resetRatingStars();
+          for (let i = 0; i < rating; i++) {
+            stars[i].classList.remove('far');
+            stars[i].classList.add('fas');
+          }
+        });
+      });
+      
+      document.getElementById('ratingStars').addEventListener('mouseout', resetRatingStars);
+    }
+
+    function resetRatingStars() {
+      const stars = document.querySelectorAll('#ratingStars i');
+      const currentRating = parseInt(document.getElementById('ratingValue').value) || 0;
+      
+      stars.forEach((star, index) => {
+        if (index < currentRating) {
+          star.classList.remove('far');
+          star.classList.add('fas');
+        } else {
+          star.classList.remove('fas');
+          star.classList.add('far');
+        }
+      });
+    }
+
+    // Search functionality
     function updateAutocomplete() {
       let allSkills = [];
       users.forEach(u => u.skillsOffered.forEach(s => {
         if (!allSkills.includes(s.name)) allSkills.push(s.name);
       }));
+      
       if (document.getElementById('searchSkill')) {
         autocomplete(document.getElementById('searchSkill'), allSkills);
       }
@@ -534,45 +1368,51 @@
 
     function autocomplete(inp, arr) {
       let currentFocus;
+      
       inp.addEventListener("input", function(e) {
         let a, b, i, val = this.value;
         closeAllLists();
-        if (!val) { return false;}
+        
+        if (!val) { return false; }
+        
         currentFocus = -1;
-        a = document.createElement("DIV");
-        a.setAttribute("id", this.id + "autocomplete-list");
-        a.setAttribute("class", "autocomplete-items");
-        this.parentNode.appendChild(a);
+        a = document.getElementById('autocomplete-list');
+        
         for (i = 0; i < arr.length; i++) {
           if (arr[i].toLowerCase().indexOf(val.toLowerCase()) !== -1) {
             b = document.createElement("DIV");
             b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
             b.innerHTML += arr[i].substr(val.length);
             b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+            
             b.addEventListener("click", function(e) {
                 inp.value = this.getElementsByTagName("input")[0].value;
                 closeAllLists();
             });
+            
             a.appendChild(b);
           }
         }
       });
+      
       inp.addEventListener("keydown", function(e) {
-        let x = document.getElementById(this.id + "autocomplete-list");
+        let x = document.getElementById('autocomplete-list');
         if (x) x = x.getElementsByTagName("div");
-        if (e.keyCode == 40) {
+        
+        if (e.keyCode == 40) { // Down arrow
           currentFocus++;
           addActive(x);
-        } else if (e.keyCode == 38) {
+        } else if (e.keyCode == 38) { // Up arrow
           currentFocus--;
           addActive(x);
-        } else if (e.keyCode == 13) {
+        } else if (e.keyCode == 13) { // Enter
           e.preventDefault();
           if (currentFocus > -1) {
             if (x) x[currentFocus].click();
           }
         }
       });
+      
       function addActive(x) {
         if (!x) return false;
         removeActive(x);
@@ -580,78 +1420,166 @@
         if (currentFocus < 0) currentFocus = (x.length - 1);
         x[currentFocus].classList.add("autocomplete-active");
       }
+      
       function removeActive(x) {
         for (let i = 0; i < x.length; i++) {
           x[i].classList.remove("autocomplete-active");
         }
       }
+      
       function closeAllLists(elmnt) {
-        let x = document.getElementsByClassName("autocomplete-items");
-        for (let i = 0; i < x.length; i++) {
-          if (elmnt != x[i] && elmnt != inp) {
-            x[i].parentNode.removeChild(x[i]);
-          }
+        const x = document.getElementById('autocomplete-list');
+        if (x && elmnt != x && elmnt != inp) {
+          x.innerHTML = '';
         }
       }
+      
       document.addEventListener("click", function (e) {
         closeAllLists(e.target);
       });
     }
 
     function searchSkill() {
+      showLoading();
+      
       let skill = document.getElementById('searchSkill').value.trim();
       let resultDiv = document.getElementById('searchResult');
+      
+      if (skill.length < 1) {
+        resultDiv.innerHTML = "<span class='error'><i class='fas fa-exclamation-circle'></i> Please enter a skill to search for.</span>";
+        hideLoading();
+        return;
+      }
+      
       let foundUsers = users.filter(user =>
         user.skillsOffered.some(s => s.name.toLowerCase() === skill.toLowerCase())
       );
+      
       if (foundUsers.length > 0) {
-        resultDiv.innerHTML = foundUsers.map(user =>
-          `<div class="user">
+        let html = '<h2>Search Results</h2>';
+        
+        foundUsers.forEach(user => {
+          const matchingSkill = user.skillsOffered.find(s => s.name.toLowerCase() === skill.toLowerCase());
+          const ratingHTML = getRatingStarsHTML(user.ratingAverage, user.ratingCount);
+          
+          html += `<div class="user">
             <b>${user.name}</b> (Discord: ${user.discord})<br>
-            <strong>Offers:</strong> <ul>${user.skillsOffered.map(s => `<li>${s.name} - ${s.description}</li>`).join('')}</ul>
-            <strong>Wants:</strong> ${user.skillsWanted.join(', ')}
-          </div>`
-        ).join('');
+            ${ratingHTML}
+            <strong>Matching Skill:</strong> 
+            <div>
+              <span class="skill-tag">${matchingSkill.name}</span>
+              ${matchingSkill.description ? `<small>${matchingSkill.description}</small>` : ''}
+              <small class="skill-category">(${matchingSkill.category})</small>
+            </div>
+          </div>`;
+        });
+        
+        resultDiv.innerHTML = html;
       } else {
-        resultDiv.innerHTML = "<span class='error'>No users found offering that skill.</span>";
+        resultDiv.innerHTML = "<div class='error' style='text-align:center;padding:20px;'><i class='fas fa-search'></i> No users found offering the skill: <strong>" + skill + "</strong></div>";
       }
+      
+      hideLoading();
     }
+
+    // Button event handlers
+    document.getElementById('addMoreSkillsBtn').addEventListener('click', function() {
+      const container = document.getElementById('skillOfferContainer');
+      const newRow = document.createElement('div');
+      newRow.className = 'skill-offer-row';
+      newRow.style = 'display:flex;margin-bottom:10px;gap:5px;';
+      
+      newRow.innerHTML = `
+        <input type="text" placeholder="Skill Name" class="input offered-skill-name" style="width:50%;" />
+        <input type="text" placeholder="Description" class="input offered-skill-desc" style="width:30%;" />
+        <select class="input offered-skill-category" style="width:25%;">
+          <option value="Other">Other</option>
+          <option value="Crafts">Crafts</option>
+          <option value="Cooking">Cooking</option>
+          <option value="Technology">Technology</option>
+          <option value="Arts">Arts</option>
+          <option value="Sports">Sports</option>
+          <option value="Education">Education</option>
+          <option value="Health">Health</option>
+        </select>
+      `;
+      
+      container.appendChild(newRow);
+    });
+
+    document.getElementById('addMoreWantsBtn').addEventListener('click', function() {
+      const container = document.getElementById('skillWantContainer');
+      const newRow = document.createElement('div');
+      newRow.className = 'skill-want-row';
+      newRow.style = 'display:flex;margin-bottom:10px;';
+      
+      newRow.innerHTML = `
+        <input type="text" placeholder="Skill Name" class="input wanted-skill-name" style="width:100%;" />
+      `;
+      
+      container.appendChild(newRow);
+    });
 
     document.getElementById('showAllUsersBtn').onclick = function() {
       showUsersPage();
+    };
+
+    document.getElementById('findMatchesBtn').onclick = function() {
+      showMatchesPage();
     };
 
     document.getElementById('usersBackBtn').onclick = function() {
       showAddSkillPage();
     };
 
-    document.getElementById('titleLink').onclick = function() {
-      showAddSkillPage();
-    };
-    document.getElementById('titleLink2').onclick = function() {
-      showAddSkillPage();
-    };
-    document.getElementById('titleLink3').onclick = function() {
+    document.getElementById('matchesBackBtn').onclick = function() {
       showAddSkillPage();
     };
 
+    document.getElementById('titleLink').onclick = function() {
+      showAddSkillPage();
+    };
+    
+    document.getElementById('titleLink2').onclick = function() {
+      showAddSkillPage();
+    };
+    
+    document.getElementById('titleLink3').onclick = function() {
+      showAddSkillPage();
+    };
+    
+    document.getElementById('titleLink4').onclick = function() {
+      showAddSkillPage();
+    };
+
+    // URL hash handling
     function handleHash() {
+      showLoading();
+      
       if (location.hash === "#register") {
         showRegisterPage(false);
       } else if (location.hash === "#users") {
         showUsersPage(false);
+      } else if (location.hash === "#matches") {
+        showMatchesPage(false);
       } else if (location.hash === "#addskill") {
         showAddSkillPage(false);
       } else {
         showRegisterPage(false);
       }
+      
+      hideLoading();
     }
 
     window.addEventListener('hashchange', handleHash);
 
-    addExampleUsersIfNeeded();
-    updateAutocomplete();
-    handleHash();
+    // Initialize
+    window.onload = function() {
+      addExampleUsersIfNeeded();
+      updateAutocomplete();
+      setupRatingStars();
+      handleHash();
+    };
   </script>
 </body>
 </html>
