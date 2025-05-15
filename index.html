@@ -354,6 +354,40 @@
   <script>
     let users = [];
 
+    // Example users from SkillSharing.java
+    const exampleUsers = [
+      {
+        name: "Ian Byczek",
+        discord: "ian#0001",
+        skillsOffered: [{ name: "Nursing", description: "" }],
+        skillsWanted: []
+      },
+      {
+        name: "Marlon Castanon",
+        discord: "marlon#0002",
+        skillsOffered: [{ name: "Blacksmith", description: "" }],
+        skillsWanted: []
+      },
+      {
+        name: "Wesley Zhang",
+        discord: "wesley#0003",
+        skillsOffered: [{ name: "Cooking", description: "" }],
+        skillsWanted: []
+      },
+      {
+        name: "Chester Duong",
+        discord: "chester#0004",
+        skillsOffered: [{ name: "Those who know", description: "" }],
+        skillsWanted: []
+      },
+      {
+        name: "Juan Zombrano",
+        discord: "juan#0005",
+        skillsOffered: [{ name: "Serving", description: "" }],
+        skillsWanted: []
+      }
+    ];
+
     function saveUsers() {
       localStorage.setItem('skillSharingUsers', JSON.stringify(users));
     }
@@ -361,6 +395,19 @@
     function loadUsers() {
       const data = localStorage.getItem('skillSharingUsers');
       users = data ? JSON.parse(data) : [];
+    }
+
+    // Add example users if not present
+    function addExampleUsersIfNeeded() {
+      loadUsers();
+      let changed = false;
+      exampleUsers.forEach(ex => {
+        if (!users.some(u => u.name === ex.name)) {
+          users.push(ex);
+          changed = true;
+        }
+      });
+      if (changed) saveUsers();
     }
 
     function showRegisterPage(pushState = true) {
@@ -602,7 +649,7 @@
 
     window.addEventListener('hashchange', handleHash);
 
-    loadUsers();
+    addExampleUsersIfNeeded();
     updateAutocomplete();
     handleHash();
   </script>
