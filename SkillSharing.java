@@ -55,7 +55,7 @@ public class SkillSharing {
             System.out.println("3. Add Skill Wanted");
             System.out.println("4. View All Users");
             System.out.println("5. Find Matches");
-            System.out.println("6. Search User");
+            System.out.println("6. Search Skill");
             System.out.println("7. Exit");
             System.out.print("Choose an option: ");
             String input = scanner.nextLine();
@@ -73,7 +73,7 @@ public class SkillSharing {
                 case 3: addSkillWanted(); break;
                 case 4: viewUsers(); break;
                 case 5: findMatches(); break;
-                case 6: searchUser(); break;
+                case 6: searchSkill(); break;
                 case 7: System.exit(0);
                 default: System.out.println("Invalid option.");
             }
@@ -177,14 +177,23 @@ public class SkillSharing {
         }
     }
 
-    private static void searchUser() {
-        System.out.print("Enter user name to search: ");
-        String name = scanner.nextLine();
-        User user = findUserByName(name);
-        if (user != null) {
-            System.out.println(user);
-        } else {
-            System.out.println("User not found.");
+    // NEW: Search for users by skill offered
+    private static void searchSkill() {
+        System.out.print("Enter skill to search for: ");
+        String skillSearch = scanner.nextLine().trim();
+        boolean found = false;
+        for (User user : users) {
+            for (Skill skill : user.skillsOffered) {
+                if (skill.name.equalsIgnoreCase(skillSearch)) {
+                    System.out.println(user);
+                    System.out.println("----------------------");
+                    found = true;
+                    break;
+                }
+            }
+        }
+        if (!found) {
+            System.out.println("No users found offering that skill.");
         }
     }
 }
