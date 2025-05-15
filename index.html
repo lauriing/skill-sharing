@@ -126,6 +126,15 @@
   <script>
     let users = [];
 
+    function saveUsers() {
+      localStorage.setItem('skillSharingUsers', JSON.stringify(users));
+    }
+
+    function loadUsers() {
+      const data = localStorage.getItem('skillSharingUsers');
+      users = data ? JSON.parse(data) : [];
+    }
+
     function displayUsers() {
       let html = '';
       users.forEach(user => {
@@ -150,6 +159,7 @@
       }
       users.push({ name, email, phone, skillsOffered: [], skillsWanted: [] });
       msg.innerHTML = "<span class='success'>User registered!</span>";
+      saveUsers();
       displayUsers();
       this.reset();
       setTimeout(() => { msg.innerHTML = ""; }, 2000);
@@ -164,6 +174,7 @@
       if (user) {
         if (!user.skillsOffered.includes(skill)) user.skillsOffered.push(skill);
         msg.innerHTML = "<span class='success'>Skill added!</span>";
+        saveUsers();
         displayUsers();
         this.reset();
       } else {
@@ -181,6 +192,7 @@
       if (user) {
         if (!user.skillsWanted.includes(skill)) user.skillsWanted.push(skill);
         msg.innerHTML = "<span class='success'>Skill added!</span>";
+        saveUsers();
         displayUsers();
         this.reset();
       } else {
@@ -220,7 +232,8 @@
       document.getElementById('matches').innerHTML = found ? html : "<i>No matches found.</i>";
     }
 
-    // Initial display
+    // Load users from localStorage on page load
+    loadUsers();
     displayUsers();
   </script>
 </body>
