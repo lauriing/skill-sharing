@@ -1519,16 +1519,16 @@
 
     // Add example users if not present
     function addExampleUsersIfNeeded() {
-      loadUsers();
-      let changed = false;
-      exampleUsers.forEach(ex => {
-        if (!users.some(u => u.name === ex.name)) {
-          users.push(ex);
-          changed = true;
-        }
-      });
-      if (changed) saveUsers();
+    loadUsers();
+    let changed = false;
+    exampleUsers.forEach(ex => {
+      if (!users.some(u => u.name === ex.name)) {
+      users.push(ex);
+      changed = true;
     }
+  });
+  if (changed) saveUsers();
+}
 
     // Show loading animation
     function showLoading() {
@@ -1817,7 +1817,7 @@
       
       saveUsers();
       
-      msg.innerHTML = "<span class='success'><i class='fas fa-check-circle'></i> User registered successfully!</span>";
+      msg.innerHTML = "<span class='success' style='display:block;text-align:center;'><i class='fas fa-check-circle'></i> User registered successfully!</span>";
       
       setTimeout(() => {
         msg.innerHTML = "";
