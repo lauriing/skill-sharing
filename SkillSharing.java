@@ -3,21 +3,32 @@ package SkillSharing;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-// User class to represent a platform user
-class User {
+class Skill {
     String name;
-    String email;
-    String phone;
-    ArrayList<String> skillsOffered = new ArrayList<>();
-    ArrayList<String> skillsWanted = new ArrayList<>();
+    String description;
 
-    public User(String name, String email, String phone) {
+    public Skill(String name, String description) {
         this.name = name;
-        this.email = email;
-        this.phone = phone;
+        this.description = description;
     }
 
-    public void addSkillOffered(String skill) {
+    public String toString() {
+        return name + (description.isEmpty() ? "" : " (" + description + ")");
+    }
+}
+
+class User {
+    String name;
+    String discordUsername;
+    ArrayList<Skill> skillsOffered = new ArrayList<>();
+    ArrayList<String> skillsWanted = new ArrayList<>();
+
+    public User(String name, String discordUsername) {
+        this.name = name;
+        this.discordUsername = discordUsername;
+    }
+
+    public void addSkillOffered(Skill skill) {
         skillsOffered.add(skill);
     }
 
@@ -26,8 +37,9 @@ class User {
     }
 
     public String toString() {
-        return "Name: " + name + " | Email: " + email + " | Phone: " + phone +
-                "\n  Offers: " + skillsOffered + "\n  Wants: " + skillsWanted;
+        return "Name: " + name + " | Discord: " + discordUsername +
+                "\n  Offers: " + skillsOffered +
+                "\n  Wants: " + skillsWanted;
     }
 }
 
@@ -37,7 +49,7 @@ public class SkillSharing {
 
     public static void main(String[] args) {
         while (true) {
-            System.out.println("\nSkill Sharing Platform");
+            System.out.println("\nIndividualis");
             System.out.println("1. Register User");
             System.out.println("2. Add Skill Offered");
             System.out.println("3. Add Skill Wanted");
@@ -69,13 +81,32 @@ public class SkillSharing {
     }
 
     private static void registerUser() {
-        System.out.print("Enter user name: ");
+        System.out.print("Enter your name: ");
         String name = scanner.nextLine();
-        System.out.print("Enter email: ");
-        String email = scanner.nextLine();
-        System.out.print("Enter phone: ");
-        String phone = scanner.nextLine();
-        users.add(new User(name, email, phone));
+        System.out.print("Enter your Discord Username: ");
+        String discord = scanner.nextLine();
+
+        User user = new User(name, discord);
+
+        System.out.print("How many skills do you offer? ");
+        int offerCount = Integer.parseInt(scanner.nextLine());
+        for (int i = 0; i < offerCount; i++) {
+            System.out.print("Enter skill offered #" + (i + 1) + ": ");
+            String skillName = scanner.nextLine();
+            System.out.print("Enter description for this skill: ");
+            String desc = scanner.nextLine();
+            user.addSkillOffered(new Skill(skillName, desc));
+        }
+
+        System.out.print("How many skills do you want? ");
+        int wantCount = Integer.parseInt(scanner.nextLine());
+        for (int i = 0; i < wantCount; i++) {
+            System.out.print("Enter skill wanted #" + (i + 1) + ": ");
+            String skillWanted = scanner.nextLine();
+            user.addSkillWanted(skillWanted);
+        }
+
+        users.add(user);
         System.out.println("User registered.");
     }
 
@@ -92,8 +123,10 @@ public class SkillSharing {
         User user = findUserByName(name);
         if (user != null) {
             System.out.print("Enter skill to offer: ");
-            String skill = scanner.nextLine();
-            user.addSkillOffered(skill);
+            String skillName = scanner.nextLine();
+            System.out.print("Enter description for this skill: ");
+            String desc = scanner.nextLine();
+            user.addSkillOffered(new Skill(skillName, desc));
             System.out.println("Skill added.");
         } else {
             System.out.println("User not found.");
@@ -130,9 +163,11 @@ public class SkillSharing {
         for (User seeker : users) {
             for (String wanted : seeker.skillsWanted) {
                 for (User provider : users) {
-                    if (provider != seeker && provider.skillsOffered.contains(wanted)) {
-                        System.out.println(seeker.name + " wants " + wanted + " - Match: " + provider.name);
-                        found = true;
+                    for (Skill skill : provider.skillsOffered) {
+                        if (provider != seeker && skill.name.equalsIgnoreCase(wanted)) {
+                            System.out.println(seeker.name + " wants " + wanted + " - Match: " + provider.name + " (" + skill + ")");
+                            found = true;
+                        }
                     }
                 }
             }
