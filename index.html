@@ -10,75 +10,186 @@
       height: 100vh;
       margin: 0;
       padding: 0;
+      overflow: hidden;
+      background: #2d174c; /* Deep purple background */
+      color: #f3e8ff;
     }
     body {
+      min-height: 100vh;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: linear-gradient(135deg, #6d28d9 0%, #a78bfa 100%);
+    }
+    #registerPage, #addSkillPage, #usersPage {
+      display: none;
+      height: 100vh;
+      overflow: auto;
+    }
+    #registerPage.active, #addSkillPage.active, #usersPage.active {
+      display: block;
+    }
+    #registerContainer {
       display: flex;
       align-items: center;
       justify-content: center;
       min-height: 100vh;
+      background: none;
     }
-    #registerPage {
+    #registerBox {
       width: 100%;
       max-width: 400px;
-      display: none;
+      background: rgba(103, 58, 183, 0.95); /* purple */
+      border-radius: 16px;
+      box-shadow: 0 4px 24px rgba(103,58,183,0.18);
+      padding-bottom: 30px;
+      color: #f3e8ff;
     }
-    #registerPage.active {
-      display: block;
+    .side-img {
+      width: 200px;
+      height: auto;
+      margin: 0 30px;
+      border-radius: 16px;
+      box-shadow: 0 4px 24px rgba(103,58,183,0.18);
     }
-    #homePage {
-      display: none;
-      width: 100vw;
+    @media (max-width: 900px) {
+      #registerContainer {
+        flex-direction: column;
+      }
+      .side-img {
+        margin: 20px 0;
+        width: 80vw;
+        max-width: 300px;
+      }
     }
-    #homePage.active {
-      display: block;
-    }
-    #usersPage {
-      display: none;
-      width: 100vw;
-      text-align: center;
-    }
-    #usersPage.active {
-      display: block;
-    }
-    .form-label {
+    .title-link {
+      color: #fff;
+      text-decoration: none;
+      cursor: pointer;
+      font-size: 2.5em;
       font-weight: bold;
-      margin-bottom: 0.2em;
+      letter-spacing: 2px;
       display: block;
+      margin-bottom: 0.2em;
+      text-shadow: 0 2px 8px #6d28d9;
+    }
+    .center-title {
+      position: static;
+      text-align: center;
+      z-index: 101;
+    }
+    .subtitle {
+      text-align: center;
+      font-size: 1.2em;
+      color: #d1c4e9;
+      margin: 0 0 30px 0;
+      padding: 0;
+      font-weight: normal;
+      letter-spacing: 1px;
+    }
+    #registerMsg {
+      text-align: center;
+      margin-top: 10px;
+      color: #fff;
     }
     .form-group {
       margin-bottom: 1em;
       width: 100%;
       max-width: 350px;
+      text-align: center;
+      margin-left: auto;
+      margin-right: auto;
     }
-    .user { border: 1px solid #e5e5e5; border-radius: 8px; padding: 1em; margin-bottom: 1em; background: #fff; }
-    .success { color: #27ae60; }
-    .error { color: #c0392b; }
+    .form-label {
+      font-weight: bold;
+      margin-bottom: 0.2em;
+      display: block;
+      text-align: center;
+      white-space: nowrap;
+      color: #ede9fe;
+    }
+    .input, input[type="text"] {
+      width: 90%;
+      padding: 0.7em;
+      border-radius: 8px;
+      border: 1px solid #a78bfa;
+      background: #ede9fe;
+      color: #4b2067;
+      margin-bottom: 0.5em;
+      font-size: 1em;
+      outline: none;
+      transition: border 0.2s;
+    }
+    .input:focus, input[type="text"]:focus {
+      border: 2px solid #7c3aed;
+      background: #fff;
+      color: #4b2067;
+    }
+    .button.primary.fit, .button.fit {
+      display: block;
+      margin: 0 auto;
+      background: linear-gradient(90deg, #7c3aed 0%, #a78bfa 100%);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 0.7em 2em;
+      font-size: 1.1em;
+      font-weight: bold;
+      box-shadow: 0 2px 8px #a78bfa44;
+      transition: background 0.2s, box-shadow 0.2s;
+    }
+    .button.primary.fit:hover, .button.fit:hover {
+      background: linear-gradient(90deg, #a78bfa 0%, #7c3aed 100%);
+      box-shadow: 0 4px 16px #a78bfa66;
+    }
+    #usersBackBtn {
+      margin: 2em auto 1em auto;
+      display: block;
+      background: #7c3aed;
+      color: #fff;
+    }
+    #showAllUsersBtn {
+      display: block;
+      margin: 2em auto 0 auto;
+      background: #a78bfa;
+      color: #4b2067;
+    }
+    .user {
+      border: 1px solid #a78bfa;
+      border-radius: 8px;
+      padding: 1em;
+      margin-bottom: 1em;
+      background: #ede9fe;
+      color: #4b2067;
+      box-shadow: 0 2px 8px #a78bfa22;
+    }
+    .success { color: #b4f5c1; }
+    .error { color: #ffb4d4; }
     .pointer { cursor: pointer; }
     .autocomplete-items {
       position: absolute;
-      border: 1px solid #d4d4d4;
+      border: 1px solid #a78bfa;
       border-bottom: none;
       border-top: none;
       z-index: 99;
       top: 100%;
       left: 0;
       right: 0;
-      background: #fff;
+      background: #ede9fe;
       max-height: 150px;
       overflow-y: auto;
+      color: #4b2067;
     }
     .autocomplete-items div {
       padding: 10px;
       cursor: pointer;
-      background-color: #fff;
-      border-bottom: 1px solid #d4d4d4;
+      background-color: #ede9fe;
+      border-bottom: 1px solid #a78bfa;
     }
     .autocomplete-items div:hover {
-      background-color: #e9e9e9;
+      background-color: #c4b5fd;
     }
     .autocomplete-active {
-      background-color: #1e90ff !important;
-      color: #ffffff;
+      background-color: #7c3aed !important;
+      color: #fff;
     }
     .flex-center-row {
       display: flex;
@@ -87,15 +198,7 @@
       gap: 40px;
       margin-bottom: 2em;
       margin-top: 2em;
-    }
-    #searchSkillContainer {
-      position: absolute;
-      top: 30px;
-      right: 40px;
-      z-index: 100;
-      display: flex;
-      align-items: center;
-      gap: 10px;
+      margin-left: 100px;
     }
     @media (max-width: 900px) {
       .flex-center-row {
@@ -103,108 +206,49 @@
         align-items: center;
         gap: 20px;
       }
-      #searchSkillContainer {
-        position: static;
-        margin-bottom: 1em;
-        justify-content: flex-end;
-        width: 100%;
-      }
-    }
-    .title-link {
-      color: inherit;
-      text-decoration: none;
-      cursor: pointer;
-      font-size: 2.5em;
-      font-weight: bold;
-      letter-spacing: 2px;
-      display: block;
-      margin-bottom: 0.2em;
-    }
-    .center-title {
-      position: absolute;
-      left: 50%;
-      top: 20px;
-      transform: translateX(-50%);
-      text-align: center;
-      z-index: 101;
-    }
-    .subtitle {
-      position: absolute;
-      left: 50%;
-      top: 70px;
-      transform: translateX(-50%);
-      text-align: center;
-      z-index: 101;
-      font-size: 1.2em;
-      color: #666;
-      margin: 0;
-      padding: 0;
-      font-weight: normal;
-      letter-spacing: 1px;
-    }
-    #registerBtn {
-      background: #1e90ff;
-      color: #fff;
-      border: none;
-      padding: 0.5em 1.2em;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 1em;
-      margin-left: 10px;
-    }
-    #registerBtn:hover {
-      background: #176dc1;
-    }
-    #usersBackBtn {
-      margin: 2em auto 1em auto;
-      display: block;
-    }
-    #toggleUsersBtn, #showAllUsersBtn {
-      display: block;
-      margin: 2em auto 0 auto;
     }
   </style>
 </head>
 <body class="is-preload">
-  <div id="registerPage">
-    <!-- Header -->
-    <a class="title-link center-title" id="titleLink">Individualis</a>
-    <div class="subtitle">You give skill, I take your skill</div>
-    <form id="registerForm" style="width:100%;max-width:400px;margin-top:120px;">
-      <div class="form-group">
-        <label class="form-label" for="name">Name:</label>
-        <input type="text" id="name" required class="input" />
+  <!-- Register Session -->
+  <div id="registerPage" class="active">
+    <div id="registerContainer">
+      <img src="pictures/zani.gif" alt="Side GIF" class="side-img" />
+      <div id="registerBox">
+        <a class="title-link center-title" id="titleLink">Individualis</a>
+        <div class="subtitle">You give skill, I take your skill</div>
+        <form id="registerForm" style="width:100%;max-width:400px;margin-top:30px;">
+          <div class="form-group">
+            <label class="form-label" for="name">Name:</label>
+            <input type="text" id="name" required class="input" />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="discord">Discord Username:</label>
+            <input type="text" id="discord" required class="input" />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="skillsOffered">What skills do you offer?</label>
+            <input type="text" id="skillsOffered" placeholder="WHATEVER U GOT MANE" required class="input" />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="skillsWanted" style="text-align:center; display:block; width:100%; white-space:nowrap;">
+              What skills do you want to learn from others?
+            </label>
+            <input type="text" id="skillsWanted" placeholder="WHATEVER U WANT MANE" required class="input" />
+          </div>
+          <button type="submit" class="button primary fit">Register</button>
+          <div id="registerMsg"></div>
+        </form>
       </div>
-      <div class="form-group">
-        <label class="form-label" for="discord">Discord Username:</label>
-        <input type="text" id="discord" required class="input" />
-      </div>
-      <div class="form-group">
-        <label class="form-label" for="skillsOffered">What skills do you offer?</label>
-        <input type="text" id="skillsOffered" placeholder="WHATEVER U GOT MANE" required class="input" />
-      </div>
-      <div class="form-group">
-        <label class="form-label" for="skillsWanted">What skills do you want to learn from others?</label>
-        <input type="text" id="skillsWanted" placeholder="WHATEVER U WANT MANE" required class="input" />
-      </div>
-      <button type="submit" class="button primary fit">Register</button>
-      <div id="registerMsg"></div>
-    </form>
+      <img src="pictures/zani.gif" alt="Side GIF" class="side-img" />
+    </div>
   </div>
 
-  <!-- Home Page -->
-  <div id="homePage">
-    <!-- Centered Title and Subtitle -->
+  <!-- Add Skill Session -->
+  <div id="addSkillPage">
     <a class="title-link center-title" id="titleLink2">Individualis</a>
     <div class="subtitle">You give skill, I take your skill</div>
-    <!-- Search Skill Top Right + Register Button -->
-    <div id="searchSkillContainer">
-      <input type="text" id="searchSkill" placeholder="Enter skill" autocomplete="off" />
-      <button onclick="searchSkill()" class="button small" type="button">Search</button>
-      <button id="registerBtn" type="button">Register</button>
-      <div id="autocomplete-list" class="autocomplete-items"></div>
-    </div>
-    <section class="container" style="margin-top:120px;">
+    <section class="container">
       <div class="flex-center-row">
         <!-- Add Skill Offered -->
         <section class="section" style="min-width:300px;">
@@ -227,7 +271,6 @@
           </form>
           <div id="offerMsg"></div>
         </section>
-
         <!-- Add Skill Wanted -->
         <section class="section" style="min-width:300px;">
           <h2>Add Skill Wanted</h2>
@@ -248,12 +291,11 @@
         </section>
       </div>
       <div id="searchResult"></div>
-      <!-- Show All Users as a new page, centered -->
       <button id="showAllUsersBtn" class="button small">Show All Users</button>
     </section>
   </div>
 
-  <!-- Users Page (full page for all users) -->
+  <!-- Show All Users Session -->
   <div id="usersPage">
     <a class="title-link center-title" id="titleLink3">Individualis</a>
     <div class="subtitle">You give skill, I take your skill</div>
@@ -262,12 +304,6 @@
     <div id="usersFull"></div>
   </div>
 
-  <!-- Footer -->
-  <footer id="footer" class="center">
-    <p></p>
-  </footer>
-
-  <!-- Scripts -->
   <script>
     let users = [];
 
@@ -281,27 +317,24 @@
     }
 
     function showRegisterPage(pushState = true) {
-      document.body.style.flexDirection = "column";
       document.getElementById('registerPage').classList.add('active');
-      document.getElementById('homePage').classList.remove('active');
+      document.getElementById('addSkillPage').classList.remove('active');
       document.getElementById('usersPage').classList.remove('active');
       if (pushState) location.hash = "#register";
     }
 
-    function showHomePage(pushState = true) {
-      document.body.style.flexDirection = "unset";
+    function showAddSkillPage(pushState = true) {
       document.getElementById('registerPage').classList.remove('active');
-      document.getElementById('homePage').classList.add('active');
+      document.getElementById('addSkillPage').classList.add('active');
       document.getElementById('usersPage').classList.remove('active');
       displayUsers();
       updateAutocomplete();
-      if (pushState) location.hash = "#home";
+      if (pushState) location.hash = "#addskill";
     }
 
     function showUsersPage(pushState = true) {
-      document.body.style.flexDirection = "unset";
       document.getElementById('registerPage').classList.remove('active');
-      document.getElementById('homePage').classList.remove('active');
+      document.getElementById('addSkillPage').classList.remove('active');
       document.getElementById('usersPage').classList.add('active');
       displayUsersFull();
       if (pushState) location.hash = "#users";
@@ -350,7 +383,7 @@
       users.push({ name, discord, skillsOffered, skillsWanted });
       msg.innerHTML = "<span class='success'>User registered!</span>";
       saveUsers();
-      setTimeout(() => { msg.innerHTML = ""; showHomePage(); }, 1000);
+      setTimeout(() => { msg.innerHTML = ""; showAddSkillPage(); }, 1000);
     };
 
     document.getElementById('offerForm').onsubmit = function(e) {
@@ -395,13 +428,14 @@
       setTimeout(() => { msg.innerHTML = ""; }, 2000);
     };
 
-    // --- AUTOCOMPLETE FOR SEARCH SKILL ---
     function updateAutocomplete() {
       let allSkills = [];
       users.forEach(u => u.skillsOffered.forEach(s => {
         if (!allSkills.includes(s.name)) allSkills.push(s.name);
       }));
-      autocomplete(document.getElementById('searchSkill'), allSkills);
+      if (document.getElementById('searchSkill')) {
+        autocomplete(document.getElementById('searchSkill'), allSkills);
+      }
     }
 
     function autocomplete(inp, arr) {
@@ -489,50 +523,41 @@
       }
     }
 
-    // Show All Users as a new page
     document.getElementById('showAllUsersBtn').onclick = function() {
       showUsersPage();
     };
 
-    // Users page back button
     document.getElementById('usersBackBtn').onclick = function() {
-      showHomePage();
+      showAddSkillPage();
     };
 
-    // Title click handlers
     document.getElementById('titleLink').onclick = function() {
-      showHomePage();
+      showAddSkillPage();
     };
     document.getElementById('titleLink2').onclick = function() {
-      showHomePage();
+      showAddSkillPage();
     };
     document.getElementById('titleLink3').onclick = function() {
-      showHomePage();
+      showAddSkillPage();
     };
 
-    // Register button handler
-    document.getElementById('registerBtn').onclick = function() {
-      showRegisterPage();
-    };
-
-    // Handle navigation with hash
     function handleHash() {
       if (location.hash === "#register") {
         showRegisterPage(false);
       } else if (location.hash === "#users") {
         showUsersPage(false);
+      } else if (location.hash === "#addskill") {
+        showAddSkillPage(false);
       } else {
-        showHomePage(false);
+        showRegisterPage(false); // Always show register page first if no hash
       }
     }
 
-    // Listen for hash changes (back/forward navigation)
     window.addEventListener('hashchange', handleHash);
 
-    // On load
     loadUsers();
-    handleHash();
     updateAutocomplete();
+    handleHash();
   </script>
 </body>
 </html>
