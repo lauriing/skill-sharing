@@ -29,6 +29,7 @@
       <div class="row gtr-150">
         <div class="col-6 col-12-medium">
 
+          <!-- Register User -->
           <section class="section">
             <h2>Register User</h2>
             <form id="registerForm">
@@ -37,10 +38,13 @@
                   <input type="text" id="name" placeholder="Name" required />
                 </div>
                 <div class="col-12">
-                  <input type="email" id="email" placeholder="Email" required />
+                  <input type="text" id="discord" placeholder="Discord Username" required />
                 </div>
                 <div class="col-12">
-                  <input type="text" id="phone" placeholder="Phone" required />
+                  <input type="text" id="skillsOffered" placeholder="Skills Offered (format: Skill:Description, ...)" required />
+                </div>
+                <div class="col-12">
+                  <input type="text" id="skillsWanted" placeholder="Skills Wanted (comma separated)" required />
                 </div>
                 <div class="col-12">
                   <button type="submit" class="button primary fit">Register</button>
@@ -50,15 +54,19 @@
             <div id="registerMsg"></div>
           </section>
 
+          <!-- Add Skill Offered -->
           <section class="section">
             <h2>Add Skill Offered</h2>
             <form id="offerForm">
               <div class="row gtr-uniform">
-                <div class="col-6">
+                <div class="col-4">
                   <input type="text" id="offerUser" placeholder="User Name" required />
                 </div>
-                <div class="col-6">
+                <div class="col-4">
                   <input type="text" id="offerSkill" placeholder="Skill" required />
+                </div>
+                <div class="col-4">
+                  <input type="text" id="offerDesc" placeholder="Skill Description" required />
                 </div>
                 <div class="col-12">
                   <button type="submit" class="button fit">Add</button>
@@ -68,6 +76,7 @@
             <div id="offerMsg"></div>
           </section>
 
+          <!-- Add Skill Wanted -->
           <section class="section">
             <h2>Add Skill Wanted</h2>
             <form id="wantForm">
@@ -89,6 +98,7 @@
         </div>
         <div class="col-6 col-12-medium">
 
+          <!-- Search User -->
           <section class="section">
             <h2>Search User</h2>
             <input type="text" id="searchName" placeholder="Enter user name" />
@@ -96,12 +106,14 @@
             <div id="searchResult"></div>
           </section>
 
+          <!-- Find Matches -->
           <section class="section">
             <h2>Find Matches</h2>
             <button onclick="findMatches()" class="button small">Find Matches</button>
             <div id="matches" class="matches"></div>
           </section>
 
+          <!-- All Users -->
           <section class="section">
             <h2>All Users</h2>
             <div id="users"></div>
@@ -139,8 +151,8 @@
       let html = '';
       users.forEach(user => {
         html += `<div class="user">
-          <b>${user.name}</b> (${user.email}, ${user.phone})<br>
-          <strong>Offers:</strong> ${user.skillsOffered.join(', ')}<br>
+          <b>${user.name}</b> (Discord: ${user.discord})<br>
+          <strong>Offers:</strong> <ul>${user.skillsOffered.map(s => `<li>${s.name} - ${s.description}</li>`).join('')}</ul>
           <strong>Wants:</strong> ${user.skillsWanted.join(', ')}
         </div>`;
       });
@@ -150,14 +162,21 @@
     document.getElementById('registerForm').onsubmit = function(e) {
       e.preventDefault();
       let name = document.getElementById('name').value.trim();
-      let email = document.getElementById('email').value.trim();
-      let phone = document.getElementById('phone').value.trim();
+      let discord = document.getElementById('discord').value.trim();
+      let skillsOfferedInput = document.getElementById('skillsOffered').value.trim();
+      let skillsWantedInput = document.getElementById('skillsWanted').value.trim();
       let msg = document.getElementById('registerMsg');
       if (users.some(u => u.name.toLowerCase() === name.toLowerCase())) {
         msg.innerHTML = "<span class='error'>User already exists.</span>";
         return;
       }
-      users.push({ name, email, phone, skillsOffered: [], skillsWanted: [] });
+      // Parse skills offered as "Skill:Description, Skill2:Description2"
+      let skillsOffered = skillsOfferedInput.split(',').map(s => {
+        let parts = s.split(':');
+        return { name: (parts[0] || '').trim(), description: (parts[1] || '').trim() };
+      }).filter(s => s.name);
+      let skillsWanted = skillsWantedInput.split(',').map(s => s.trim()).filter(s => s);
+      users.push({ name, discord, skillsOffered, skillsWanted });
       msg.innerHTML = "<span class='success'>User registered!</span>";
       saveUsers();
       displayUsers();
@@ -169,14 +188,19 @@
       e.preventDefault();
       let name = document.getElementById('offerUser').value.trim();
       let skill = document.getElementById('offerSkill').value.trim();
+      let desc = document.getElementById('offerDesc').value.trim();
       let msg = document.getElementById('offerMsg');
       let user = users.find(u => u.name.toLowerCase() === name.toLowerCase());
       if (user) {
-        if (!user.skillsOffered.includes(skill)) user.skillsOffered.push(skill);
-        msg.innerHTML = "<span class='success'>Skill added!</span>";
-        saveUsers();
-        displayUsers();
-        this.reset();
+        if (!user.skillsOffered.some(s => s.name.toLowerCase() === skill.toLowerCase())) {
+          user.skillsOffered.push({ name: skill, description: desc });
+          msg.innerHTML = "<span class='success'>Skill added!</span>";
+          saveUsers();
+          displayUsers();
+          this.reset();
+        } else {
+          msg.innerHTML = "<span class='error'>Skill already exists for this user.</span>";
+        }
       } else {
         msg.innerHTML = "<span class='error'>User not found.</span>";
       }
@@ -207,8 +231,8 @@
       let resultDiv = document.getElementById('searchResult');
       if (user) {
         resultDiv.innerHTML = `<div class="user">
-          <b>${user.name}</b> (${user.email}, ${user.phone})<br>
-          <strong>Offers:</strong> ${user.skillsOffered.join(', ')}<br>
+          <b>${user.name}</b> (Discord: ${user.discord})<br>
+          <strong>Offers:</strong> <ul>${user.skillsOffered.map(s => `<li>${s.name} - ${s.description}</li>`).join('')}</ul>
           <strong>Wants:</strong> ${user.skillsWanted.join(', ')}
         </div>`;
       } else {
@@ -222,7 +246,7 @@
       users.forEach(seeker => {
         seeker.skillsWanted.forEach(wanted => {
           users.forEach(provider => {
-            if (provider !== seeker && provider.skillsOffered.includes(wanted)) {
+            if (provider !== seeker && provider.skillsOffered.some(s => s.name.toLowerCase() === wanted.toLowerCase())) {
               html += `<div><b>${seeker.name}</b> wants <strong>${wanted}</strong> - Match: <b>${provider.name}</b></div>`;
               found = true;
             }
