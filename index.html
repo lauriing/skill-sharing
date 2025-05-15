@@ -6,12 +6,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/html5up-stellar/1.0.0/assets/css/main.css" />
   <style>
+    :root {
+      --main-text-stroke: 4px 4px 16px #000;
+    }
     html, body {
       height: 100vh;
       margin: 0;
       padding: 0;
       overflow: hidden;
-      background: #2d174c; /* Deep purple background */
+      background: #2d174c;
       color: #f3e8ff;
     }
     body {
@@ -37,7 +40,7 @@
     #registerBox {
       width: 100%;
       max-width: 400px;
-      background: rgba(103, 58, 183, 0.95); /* purple */
+      background: rgba(103, 58, 183, 0.95);
       border-radius: 16px;
       box-shadow: 0 4px 24px rgba(103,58,183,0.18);
       padding-bottom: 30px;
@@ -69,7 +72,7 @@
       letter-spacing: 2px;
       display: block;
       margin-bottom: 0.2em;
-      text-shadow: 0 2px 8px #6d28d9;
+      text-shadow: 0 2px 8px #6d28d9, var(--main-text-stroke);
     }
     .center-title {
       position: static;
@@ -84,11 +87,13 @@
       padding: 0;
       font-weight: normal;
       letter-spacing: 1px;
+      text-shadow: var(--main-text-stroke);
     }
     #registerMsg {
       text-align: center;
       margin-top: 10px;
       color: #fff;
+      text-shadow: var(--main-text-stroke);
     }
     .form-group {
       margin-bottom: 1em;
@@ -105,6 +110,7 @@
       text-align: center;
       white-space: nowrap;
       color: #ede9fe;
+      text-shadow: var(--main-text-stroke);
     }
     .input, input[type="text"] {
       width: 90%;
@@ -117,40 +123,50 @@
       font-size: 1em;
       outline: none;
       transition: border 0.2s;
+      text-shadow: none;
     }
     .input:focus, input[type="text"]:focus {
       border: 2px solid #7c3aed;
       background: #fff;
       color: #4b2067;
     }
-    .button.primary.fit, .button.fit {
+    .button.primary.fit, .button.fit, #searchSkillContainer .button.small {
       display: block;
       margin: 0 auto;
-      background: linear-gradient(90deg, #7c3aed 0%, #a78bfa 100%);
+      background: linear-gradient(90deg, #7c3aed 0%, #5b21b6 100%);
       color: #fff;
-      border: none;
+      border: 2.5px solid gold;
       border-radius: 8px;
       padding: 0.7em 2em;
       font-size: 1.1em;
       font-weight: bold;
       box-shadow: 0 2px 8px #a78bfa44;
-      transition: background 0.2s, box-shadow 0.2s;
+      transition: background 0.2s, box-shadow 0.2s, transform 0.1s;
+      text-shadow: var(--main-text-stroke);
     }
-    .button.primary.fit:hover, .button.fit:hover {
-      background: linear-gradient(90deg, #a78bfa 0%, #7c3aed 100%);
-      box-shadow: 0 4px 16px #a78bfa66;
+    .button.primary.fit:hover, .button.fit:hover, #searchSkillContainer .button.small:hover {
+      background: linear-gradient(90deg, #5b21b6 0%, #7c3aed 100%);
+      box-shadow: 0 4px 16px #7c3aed66;
+      transform: translateY(2px);
+    }
+    .button.primary.fit:active, .button.fit:active, #searchSkillContainer .button.small:active {
+      transform: translateY(4px);
     }
     #usersBackBtn {
       margin: 2em auto 1em auto;
       display: block;
       background: #7c3aed;
       color: #fff;
+      border: 2.5px solid gold;
+      text-shadow: var(--main-text-stroke);
     }
     #showAllUsersBtn {
       display: block;
       margin: 2em auto 0 auto;
       background: #a78bfa;
       color: #4b2067;
+      border: 2.5px solid gold;
+      text-shadow: var(--main-text-stroke);
     }
     .user {
       border: 1px solid #a78bfa;
@@ -160,9 +176,10 @@
       background: #ede9fe;
       color: #4b2067;
       box-shadow: 0 2px 8px #a78bfa22;
+      text-shadow: var(--main-text-stroke);
     }
-    .success { color: #b4f5c1; }
-    .error { color: #ffb4d4; }
+    .success { color: #b4f5c1; text-shadow: var(--main-text-stroke); }
+    .error { color: #ffb4d4; text-shadow: var(--main-text-stroke); }
     .pointer { cursor: pointer; }
     .autocomplete-items {
       position: absolute;
@@ -177,12 +194,14 @@
       max-height: 150px;
       overflow-y: auto;
       color: #4b2067;
+      text-shadow: var(--main-text-stroke);
     }
     .autocomplete-items div {
       padding: 10px;
       cursor: pointer;
       background-color: #ede9fe;
       border-bottom: 1px solid #a78bfa;
+      text-shadow: var(--main-text-stroke);
     }
     .autocomplete-items div:hover {
       background-color: #c4b5fd;
@@ -190,6 +209,7 @@
     .autocomplete-active {
       background-color: #7c3aed !important;
       color: #fff;
+      text-shadow: var(--main-text-stroke);
     }
     .flex-center-row {
       display: flex;
@@ -200,12 +220,31 @@
       margin-top: 2em;
       margin-left: 100px;
     }
+    #searchSkillContainer {
+      position: absolute;
+      top: 30px;
+      right: 40px;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
     @media (max-width: 900px) {
       .flex-center-row {
         flex-direction: column;
         align-items: center;
         gap: 20px;
       }
+      #searchSkillContainer {
+        position: static;
+        margin-bottom: 1em;
+        justify-content: flex-end;
+        width: 100%;
+      }
+    }
+    /* Add black stroke to all text outside of input/textarea/button */
+    body, h1, h2, h3, h4, h5, h6, label, .subtitle, .title-link, .user, .success, .error, #registerMsg, #usersFull, #searchResult {
+      text-shadow: var(--main-text-stroke);
     }
   </style>
 </head>
@@ -246,6 +285,12 @@
 
   <!-- Add Skill Session -->
   <div id="addSkillPage">
+    <!-- Search bar at top right -->
+    <div id="searchSkillContainer">
+      <input type="text" id="searchSkill" placeholder="Enter skill" autocomplete="off" />
+      <button onclick="searchSkill()" class="button small" type="button">Search</button>
+      <div id="autocomplete-list" class="autocomplete-items"></div>
+    </div>
     <a class="title-link center-title" id="titleLink2">Individualis</a>
     <div class="subtitle">You give skill, I take your skill</div>
     <section class="container">
@@ -293,6 +338,8 @@
       <div id="searchResult"></div>
       <button id="showAllUsersBtn" class="button small">Show All Users</button>
     </section>
+    <!-- Herta GIF at the bottom of the Add Skill session -->
+    <img src="pictures/herta.gif" alt="Herta GIF" style="display:block; margin: 40px auto 10px auto;margin-left:650px; max-width:700px; width:100%; border-radius:16px; box-shadow:0 4px 24px #7c3aed55;">
   </div>
 
   <!-- Show All Users Session -->
@@ -549,7 +596,7 @@
       } else if (location.hash === "#addskill") {
         showAddSkillPage(false);
       } else {
-        showRegisterPage(false); // Always show register page first if no hash
+        showRegisterPage(false);
       }
     }
 
